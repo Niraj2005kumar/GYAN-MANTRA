@@ -1,6 +1,5 @@
-node_modules/
+backend/serviceAccountKey.json
+serviceAccountKey.json
 .env
 .env.local
-build/
-dist/
-.cache/
+node_modules/
