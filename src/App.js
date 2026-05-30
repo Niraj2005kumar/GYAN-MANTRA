@@ -21,6 +21,11 @@ import Blog from './pages/Blog';
 import FAQ from './pages/fAQ';
 
 import CoursePlayer from './components/CoursePlayer';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminStudents from './pages/admin/AdminStudents';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminSettings from './pages/admin/AdminSettings';
 
 function App() {
   return (
@@ -29,6 +34,11 @@ function App() {
         <Navbar />
 
         <Routes>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/courses" element={<AdminCourses />} />
+          <Route path="/admin/students" element={<AdminStudents />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
 
           {/* ===== Public Routes ===== */}
           <Route path="/" element={<Home />} />
@@ -53,6 +63,48 @@ function App() {
 
           {/* ===== Admin Routes (Separated) ===== */}
           <Route path="/admin/login" element={<Login />} />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/courses"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminCourses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/students"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminStudents />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/analytics"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminAnalytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminSettings />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/admin/upload"
             element={
@@ -61,7 +113,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+
 
           {/* ===== Other ===== */}
           <Route

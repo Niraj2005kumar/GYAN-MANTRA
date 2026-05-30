@@ -32,6 +32,72 @@ const uploadVideo = (buffer, publicId) =>
     streamifier.createReadStream(buffer).pipe(uploadStream);
   });
 
+console.log('✅ uploads.js loaded');
+
+// ✅ Compatibility route for existing frontend
+// Frontend currently posts: /api/admin/upload-video with FormData fields:
+// - courseId
+// - title
+// - duration (optional)
+// - file field name: video
+router.post(
+  '/upload-video',
+  (req, res, next) => {
+    console.log('🔥 upload-video route hit');
+    next();
+  },
+  auth,
+  upload.single('video'),
+  async (req, res) => {
+    try {
+      if (req.userRole !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    const { courseId, title, duration } = req.body;
+
+    if (!courseId || !title) {
+      return res.status(400).json({ message: 'courseId and title are required' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Video file required' });
+    }
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    const publicId = `course_${courseId}_${Date.now()}`;
+    const uploadResult = await uploadVideo(req.file.buffer, publicId);
+
+    const videoRecord = {
+      title: title || 'Untitled Video',
+      duration: duration || '00:00',
+      publicId: uploadResult.public_id || null,
+      videoUrl: uploadResult.secure_url,
+      uploadedAt: new Date(),
+      uploadedBy: req.userId || 'admin'
+    };
+
+    // Ensure videos array exists
+    course.videos = course.videos || [];
+    course.videos.push(videoRecord);
+
+    await course.save();
+
+    return res.status(201).json({
+      message: 'Video uploaded successfully',
+      video: videoRecord,
+      course
+    });
+  } catch (error) {
+    console.error('Video upload failed:', error);
+    res.status(500).json({ message: 'Video upload failed', error: error.message });
+  }
+});
+
 router.post('/courses/upload', auth, upload.single('video'), async (req, res) => {
   try {
     if (req.userRole !== 'admin') {
