@@ -33,15 +33,40 @@ router.post('/enroll/:courseId', auth, async (req, res) => {
     if (existing) {
       return res.status(400).json({ message: 'Already enrolled' });
     }
+
+    const User = require('../models/User');
+    const user = await User.findOne({ firebaseId: req.userId });
+    if (!user) {
+      return res.status(404).json({ message: 'User profile not found' });
+    }
+
+    const course = await Course.findById(req.params.courseId);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
     
     const enrollment = new Enrollment({
       userId: req.userId,
-      courseId: req.params.courseId
+      courseId: req.params.courseId,
+      progress: 0,
+      enrolledAt: new Date(),
+      lastAccessed: new Date(),
+      userInfo: {
+        name: user.name,
+        email: user.email
+      },
+      courseInfo: {
+        title: course.title,
+        price: course.price,
+        instructor: course.instructor,
+        thumbnail: course.thumbnail || null
+      }
     });
     await enrollment.save();
     
     res.json({ message: 'Enrolled successfully', enrollment });
   } catch (error) {
+    console.error('Enroll error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

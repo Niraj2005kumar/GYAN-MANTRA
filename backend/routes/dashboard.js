@@ -75,13 +75,30 @@ router.post('/enroll', auth, async (req, res) => {
       return res.status(400).json({ message: "Already enrolled" });
     }
 
+    // 🔍 fetch user profile for storing info
+    const User = require('../models/User');
+    const user = await User.findOne({ firebaseId: req.userId });
+    if (!user) {
+      return res.status(404).json({ message: "User profile not found" });
+    }
+
     // ✅ create enrollment
     const enrollment = new Enrollment({
       userId: req.userId,
       courseId,
       progress: 0,
       enrolledAt: new Date(),
-      lastAccessed: new Date()
+      lastAccessed: new Date(),
+      userInfo: {
+        name: user.name,
+        email: user.email
+      },
+      courseInfo: {
+        title: course.title,
+        price: course.price,
+        instructor: course.instructor,
+        thumbnail: course.thumbnail || null
+      }
     });
 
     await enrollment.save();

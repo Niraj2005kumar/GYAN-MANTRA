@@ -10,6 +10,8 @@ class Enrollment {
     this.progress = data.progress || 0;
     this.currentLesson = data.currentLesson || 0;
     this.completedLessons = data.completedLessons || [];
+    this.userInfo = data.userInfo || null;
+    this.courseInfo = data.courseInfo || null;
     this.lastAccessed = data.lastAccessed
       ? typeof data.lastAccessed.toDate === 'function'
         ? data.lastAccessed.toDate()
@@ -39,6 +41,8 @@ class Enrollment {
       progress: this.progress,
       currentLesson: this.currentLesson,
       completedLessons: this.completedLessons,
+      userInfo: this.userInfo,
+      courseInfo: this.courseInfo,
       lastAccessed: this.lastAccessed,
       completedAt: this.completedAt,
       enrolledAt: this.enrolledAt
