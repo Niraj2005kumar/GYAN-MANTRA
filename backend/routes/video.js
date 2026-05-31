@@ -30,13 +30,26 @@ router.get('/:courseId', auth, async (req, res) => {
     }
 
     const expiresAt = Math.floor(Date.now() / 1000) + 600;
-    const signedUrl = cloudinary.url(video.publicId, {
-      resource_type: 'video',
-      type: 'authenticated',
-      sign_url: true,
-      secure: true,
-      expires_at: expiresAt
-    });
+    let signedUrl;
+    
+    const isCloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
+                                   process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name';
+    if (isCloudinaryConfigured) {
+      try {
+        signedUrl = cloudinary.url(video.publicId, {
+          resource_type: 'video',
+          type: 'authenticated',
+          sign_url: true,
+          secure: true,
+          expires_at: expiresAt
+        });
+      } catch (err) {
+        console.warn('⚠️ Cloudinary URL signing failed, falling back:', err.message);
+        signedUrl = video.videoUrl || 'https://res.cloudinary.com/demo/video/upload/dog.mp4';
+      }
+    } else {
+      signedUrl = video.videoUrl || 'https://res.cloudinary.com/demo/video/upload/dog.mp4';
+    }
 
     res.json({
       url: signedUrl,

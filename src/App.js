@@ -34,12 +34,6 @@ function App() {
         <Navbar />
 
         <Routes>
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/courses" element={<AdminCourses />} />
-          <Route path="/admin/students" element={<AdminStudents />} />
-          <Route path="/admin/analytics" element={<AdminAnalytics />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
-
           {/* ===== Public Routes ===== */}
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<Courses />} />

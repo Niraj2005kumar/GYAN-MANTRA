@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 
 const AdminAnalytics = () => {
   const { user } = useAuth();
@@ -9,8 +10,9 @@ const AdminAnalytics = () => {
 
   return (
     <ProtectedRoute adminOnly={true}>
-      <div style={{ background: '#f8fafc', minHeight: '90vh', padding: '32px 5%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div className="gm-admin-container">
+        <AdminSidebar active="analytics" />
+        <div className="gm-admin-content">
           <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8, color: '#0f172a' }}>Admin Analytics</h1>
           <p style={{ margin: 0, color: '#64748b', fontWeight: 500, marginBottom: 18 }}>
             Analytics cards and revenue calculations will be populated once analytics endpoints are added.

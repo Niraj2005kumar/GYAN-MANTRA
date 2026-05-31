@@ -94,7 +94,7 @@ const Navbar = () => {
               <>
                 <span style={{ color: '#4f46e5', fontWeight: '500', fontSize: '14px' }}>👋 {user.name}</span>
                 {user.role === 'admin' && (
-                  <Link to="/admin/upload">
+                  <Link to="/admin/dashboard">
                     <button style={{ 
                       background: 'transparent', 
                       border: '1px solid #cbd5e1', 

@@ -90,20 +90,22 @@ const AdminSidebar = ({ active }) => {
 
       {/* Mobile/Tablet */}
       <div className="gm-admin-sidebar-mobile">
-        <div style={{ position: 'sticky', top: 78, zIndex: 1001, background: 'transparent' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontWeight: 900, color: '#0f172a', fontSize: 16 }}>Admin Panel</div>
           <button
             type="button"
             onClick={() => setOpen(!open)}
             style={{
-              padding: '10px 14px',
-              borderRadius: 14,
-              border: '1px solid #e2e8f0',
-              background: 'white',
-              fontWeight: 900,
+              padding: '8px 14px',
+              borderRadius: 10,
+              border: '1px solid #cbd5e1',
+              background: '#f8fafc',
+              fontWeight: 800,
               cursor: 'pointer',
+              color: '#334155'
             }}
           >
-            ☰ Menu
+            {open ? '✕ Close' : '☰ Menu'}
           </button>
         </div>
 
@@ -156,12 +158,39 @@ const AdminSidebar = ({ active }) => {
 
       {/* Responsive CSS */}
       <style>{`
+        .gm-admin-container {
+          display: flex;
+          flex-direction: column;
+          min-height: 90vh;
+          background: #f8fafc;
+        }
+        .gm-admin-content {
+          flex: 1;
+          padding: 32px 5%;
+          max-width: 1280px;
+          margin-left: 0;
+          box-sizing: border-box;
+        }
         .gm-admin-sidebar-desktop { display: none; }
+        .gm-admin-sidebar-mobile { 
+          display: block; 
+          padding: 16px 5%; 
+          background: white; 
+          border-bottom: 1px solid #e2e8f0; 
+          position: sticky;
+          top: 68px;
+          z-index: 998;
+        }
         @media (min-width: 1024px) {
           .gm-admin-sidebar-desktop { display: block !important; }
           .gm-admin-sidebar-mobile { display: none !important; }
+          .gm-admin-content {
+            margin-left: 260px !important;
+          }
+          .gm-admin-container {
+            flex-direction: row;
+          }
         }
-        .gm-admin-sidebar-mobile { display: block; }
       `}</style>
     </>
   );

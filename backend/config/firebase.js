@@ -1,21 +1,56 @@
-let db;
+let activeDb;
+let isMock = false;
+
+const mockDb = createMockFirestore();
 
 try {
   const { admin } = require('../firebase-admin');
   
   if (admin && typeof admin.firestore === 'function') {
-    db = admin.firestore();
+    const realDb = admin.firestore();
     console.log('✅ Firestore Connected');
+    activeDb = realDb;
+    
+    // Start async connection verification
+    async function checkConnection() {
+      try {
+        await realDb.collection('courses').limit(1).get();
+        console.log('✅ Firestore Connection Verified Succeeded. Using real database.');
+      } catch (err) {
+        console.warn('⚠️ Firestore Authentication Failed (Invalid Credentials or Revoked Key).');
+        console.warn('🔄 Falling back to Mock Database for seamless local development.');
+        activeDb = mockDb;
+        isMock = true;
+      }
+    }
+    checkConnection();
   } else {
     console.log('⚠️ Firebase Admin SDK not initialized. Using mock database.');
-    // Create a mock database for development
-    db = createMockFirestore();
+    activeDb = mockDb;
+    isMock = true;
   }
 } catch (error) {
   console.log('⚠️ Firebase initialization failed:', error.message);
   console.log('Using mock database for development.');
-  db = createMockFirestore();
+  activeDb = mockDb;
+  isMock = true;
 }
+
+// Dynamic transparent Proxy so startup-time initialized models automatically route queries
+const db = {
+  collection: (name) => {
+    return new Proxy({}, {
+      get: (target, prop) => {
+        const activeCollection = activeDb.collection(name);
+        const value = activeCollection[prop];
+        if (typeof value === 'function') {
+          return value.bind(activeCollection);
+        }
+        return value;
+      }
+    });
+  }
+};
 
 // Mock Firestore for development
 function createMockFirestore() {

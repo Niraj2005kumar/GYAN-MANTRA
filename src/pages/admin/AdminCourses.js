@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 
 const AdminCourses = () => {
   const { user } = useAuth();
@@ -32,8 +33,9 @@ const AdminCourses = () => {
 
   return (
     <ProtectedRoute adminOnly={true}>
-      <div style={{ background: '#f8fafc', minHeight: '90vh', padding: '32px 5%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div className="gm-admin-container">
+        <AdminSidebar active="courses" />
+        <div className="gm-admin-content">
           <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8, color: '#0f172a' }}>Admin Courses</h1>
           <p style={{ color: '#64748b', marginBottom: 18, fontWeight: 500 }}>Manage your course catalog.</p>
 

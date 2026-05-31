@@ -77,9 +77,9 @@ const AdminDashboard = () => {
 
   return (
     <ProtectedRoute adminOnly={true}>
-      <div style={{ background: '#f8fafc', minHeight: '90vh' }}>
+      <div className="gm-admin-container">
         <AdminSidebar active="dashboard" />
-        <div  style={{marginLeft: window.innerWidth >= 1024 ? '280px' : '0px',padding: '32px 5%', maxWidth: 1280}}>
+        <div className="gm-admin-content">
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 20 }}>
             <div>
               <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, color: '#0f172a' }}>Admin Dashboard</h1>

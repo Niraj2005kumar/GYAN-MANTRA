@@ -13,6 +13,10 @@ const CoursePlayer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEnrolled, setIsEnrolled] = useState(false);
+  
+  // Progress states
+  const [progress, setProgress] = useState(0);
+  const [completedLessons, setCompletedLessons] = useState([]);
 
   useEffect(() => {
     const loadCourse = async () => {
@@ -23,6 +27,7 @@ const CoursePlayer = () => {
       try {
         const courseResponse = await api.get(`/courses/${id}`);
         setCourse(courseResponse.data);
+        const total = courseResponse.data.videos?.length || 0;
 
         if (!user) {
           setError('Please log in to access this course.');
@@ -32,6 +37,22 @@ const CoursePlayer = () => {
         const videoResponse = await api.get(`/video/${id}?lessonIndex=${currentLesson}`);
         setVideoURL(videoResponse.data.url);
         setIsEnrolled(true);
+
+        // Fetch enrollment progress to set checkbox states
+        const dashboardResponse = await api.get('/dashboard');
+        const enrollment = (dashboardResponse.data.enrolledCourses || []).find((item) => item._id === id || item.id === id);
+        if (enrollment) {
+          const currentProgress = enrollment.progress || 0;
+          setProgress(currentProgress);
+          // Distribute completed lessons based on progress percentage
+          const completedCount = Math.round((currentProgress / 100) * total);
+          const completedList = [];
+          for (let i = 0; i < completedCount; i++) {
+            completedList.push(i);
+          }
+          setCompletedLessons(completedList);
+        }
+
       } catch (err) {
         const message = err.response?.data?.message || 'Access denied or course not found.';
         setError(message);
@@ -47,6 +68,29 @@ const CoursePlayer = () => {
   const handleLessonClick = (index) => {
     if (!course?.videos?.[index]) return;
     setCurrentLesson(index);
+  };
+
+  const handleToggleComplete = async () => {
+    const total = course?.videos?.length || 0;
+    if (total === 0) return;
+
+    let nextCompleted;
+    if (completedLessons.includes(currentLesson)) {
+      nextCompleted = completedLessons.filter(idx => idx !== currentLesson);
+    } else {
+      nextCompleted = [...completedLessons, currentLesson];
+    }
+
+    // Ensure we don't exceed 100% and keep progress correct
+    const newProgress = Math.min(100, Math.round((nextCompleted.length / total) * 100));
+    setCompletedLessons(nextCompleted);
+    setProgress(newProgress);
+
+    try {
+      await api.put('/dashboard/progress', { courseId: id, progress: newProgress });
+    } catch (err) {
+      console.error('Failed to save progress to backend:', err);
+    }
   };
 
   if (loading) {
@@ -83,14 +127,14 @@ const CoursePlayer = () => {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, marginBottom: 24 }}>
           <h1>{course?.title || 'Course Player'}</h1>
-          <button onClick={() => navigate('/dashboard')} style={{ background: '#4f46e5', color: 'white', padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer' }}>
+          <button onClick={() => navigate('/dashboard')} style={{ background: '#4f46e5', color: 'white', padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontWeight: 700 }}>
             Back to Dashboard
           </button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24 }}>
           <div>
-            <div style={{ background: '#111827', borderRadius: 20, overflow: 'hidden', minHeight: 220 }}>
+            <div style={{ background: '#111827', borderRadius: 20, overflow: 'hidden', minHeight: 400, border: '1px solid #1e293b', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}>
               {videoURL ? (
                 <video src={videoURL} controls autoPlay style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
@@ -98,37 +142,83 @@ const CoursePlayer = () => {
               )}
             </div>
 
-            <div style={{ marginTop: 20, padding: 20, background: '#111827', borderRadius: 20 }}>
-              <h2>{currentLessonData.title || `Lesson ${currentLesson + 1}`}</h2>
-              <p style={{ color: '#9ca3af' }}>{currentLessonData.duration || 'Unknown duration'}</p>
-              <p style={{ marginTop: 12, color: '#d1d5db' }}>{course?.description || 'Private course video playback through backend.'}</p>
+            <div style={{ marginTop: 20, padding: 20, background: '#111827', borderRadius: 20, border: '1px solid #1e293b' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                <div>
+                  <h2 style={{ margin: 0 }}>{currentLessonData.title || `Lesson ${currentLesson + 1}`}</h2>
+                  <p style={{ color: '#9ca3af', margin: '4px 0 0 0' }}>Duration: {currentLessonData.duration || 'Unknown duration'}</p>
+                </div>
+                <button
+                  onClick={handleToggleComplete}
+                  style={{
+                    padding: '10px 16px',
+                    background: completedLessons.includes(currentLesson) ? '#10b981' : '#4f46e5',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: 10,
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    fontSize: 14
+                  }}
+                >
+                  {completedLessons.includes(currentLesson) ? '✓ Completed' : 'Mark as Completed'}
+                </button>
+              </div>
+              <p style={{ marginTop: 16, color: '#cbd5e1', lineHeight: 1.6 }}>{course?.description || 'Private course video playback through backend.'}</p>
             </div>
           </div>
 
-          <div style={{ background: '#111827', borderRadius: 20, padding: 20, maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}>
-            <h3 style={{ marginBottom: 16 }}>Lessons</h3>
+          <div style={{ background: '#111827', borderRadius: 20, padding: 20, border: '1px solid #1e293b', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}>
+            <div style={{ borderBottom: '1px solid #1e293b', paddingBottom: 14, marginBottom: 16 }}>
+              <h3 style={{ margin: 0, fontSize: 18 }}>Lessons</h3>
+              <div style={{ marginTop: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#94a3b8', marginBottom: 4, fontWeight: 700 }}>
+                  <span>YOUR PROGRESS</span>
+                  <span>{progress}%</span>
+                </div>
+                <div style={{ height: 6, background: '#1e293b', borderRadius: 3 }}>
+                  <div style={{ height: '100%', width: `${progress}%`, background: 'linear-gradient(90deg, #10b981, #059669)', borderRadius: 3 }}></div>
+                </div>
+              </div>
+            </div>
+            
             <div style={{ display: 'grid', gap: 12 }}>
-              {lessons.map((lesson, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleLessonClick(index)}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    padding: 14,
-                    borderRadius: 14,
-                    border: '1px solid #1f2937',
-                    background: currentLesson === index ? '#4f46e5' : '#111827',
-                    color: currentLesson === index ? '#fff' : '#d1d5db',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <span>{lesson.title || `Lesson ${index + 1}`}</span>
-                  <span style={{ fontSize: 12 }}>{lesson.duration || '00:00'}</span>
-                </button>
-              ))}
+              {lessons.map((lesson, index) => {
+                const isCompleted = completedLessons.includes(index);
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleLessonClick(index)}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      width: '100%',
+                      padding: 14,
+                      borderRadius: 14,
+                      border: '1px solid #1f2937',
+                      background: currentLesson === index ? '#4f46e5' : '#1e293b',
+                      color: currentLesson === index ? '#fff' : '#d1d5db',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ 
+                        color: isCompleted ? '#10b981' : (currentLesson === index ? 'white' : '#64748b'),
+                        fontSize: 16
+                      }}>
+                        {isCompleted ? '✓' : '○'}
+                      </span>
+                      <span>{lesson.title || `Lesson ${index + 1}`}</span>
+                    </div>
+                    <span style={{ fontSize: 12, opacity: 0.8 }}>{lesson.duration || '00:00'}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

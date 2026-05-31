@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 
 const AdminSettings = () => {
   const { user } = useAuth();
@@ -9,8 +10,9 @@ const AdminSettings = () => {
 
   return (
     <ProtectedRoute adminOnly={true}>
-      <div style={{ background: '#f8fafc', minHeight: '90vh', padding: '32px 5%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div className="gm-admin-container">
+        <AdminSidebar active="settings" />
+        <div className="gm-admin-content">
           <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8, color: '#0f172a' }}>Admin Settings</h1>
           <p style={{ margin: 0, color: '#64748b', fontWeight: 500, marginBottom: 18 }}>
             Manage profile and application settings.
