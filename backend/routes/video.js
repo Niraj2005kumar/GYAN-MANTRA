@@ -25,7 +25,9 @@ router.get('/:courseId', auth, async (req, res) => {
     const lessonIndex = Number(req.query.lessonIndex || 0);
     const video = (course.videos || [])[lessonIndex];
 
-    if (!video || !video.publicId) {
+    const publicId = video?.publicId || video?.public_id || video?.publicID || video?.public;
+
+    if (!video || !publicId) {
       return res.status(404).json({ message: 'Video lesson not available' });
     }
 
@@ -36,7 +38,7 @@ router.get('/:courseId', auth, async (req, res) => {
                                    process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name';
     if (isCloudinaryConfigured) {
       try {
-        signedUrl = cloudinary.url(video.publicId, {
+        signedUrl = cloudinary.url(publicId, {
           resource_type: 'video',
           type: 'authenticated',
           sign_url: true,

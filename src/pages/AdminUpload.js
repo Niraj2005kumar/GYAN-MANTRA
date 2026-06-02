@@ -47,6 +47,7 @@ const AdminUpload = () => {
 
     try {
       const formData = new FormData();
+      console.log("Selected courseId:", courseId);
       formData.append('courseId', courseId);
       formData.append('title', title);
       formData.append('duration', duration);
@@ -90,20 +91,30 @@ const AdminUpload = () => {
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 18 }}>
               
               <label style={{ display: 'grid', gap: 6, fontWeight: 700, color: '#374151' }}>
-                Select Course
-                <select
-                  value={courseId}
-                  onChange={(e) => setCourseId(e.target.value)}
-                  style={{ width: '100%', padding: 12, borderRadius: 10, border: '1px solid #cbd5e1', fontSize: 15, background: '#fff' }}
-                >
-                  <option value="">-- Choose Course --</option>
-                  {courses.map((c) => (
-                    <option key={c._id || c.id} value={c._id || c.id}>
-                      {c.title}
-                    </option>
-                  ))}
-                </select>
-              </label>
+  Select Course
+
+  <select
+    value={courseId}
+    onChange={(e) => setCourseId(e.target.value)}
+    style={{
+      width: '100%',
+      padding: 12,
+      borderRadius: 10,
+      border: '1px solid #cbd5e1',
+      fontSize: 15,
+      background: '#fff'
+    }}
+  >
+    <option value="">-- Choose Course --</option>
+
+    <option value="python-course">Python Course</option>
+    <option value="web-development">Web Development</option>
+    <option value="data-science">Data Science</option>
+    <option value="mathematics">Mathematics</option>
+    <option value="gate-preparation">GATE Preparation</option>
+
+  </select>
+</label>
 
               <label style={{ display: 'grid', gap: 6, fontWeight: 700, color: '#374151' }}>
                 Video title

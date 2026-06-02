@@ -5,7 +5,6 @@ const Course = require('../models/Course');
 
 const router = express.Router();
 
-
 // ===============================
 // ✅ 1. GET DASHBOARD DATA
 // ===============================
@@ -46,11 +45,10 @@ router.get('/', auth, async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Dashboard GET error:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
-
 
 // ===============================
 // ✅ 2. ENROLL (BUY COURSE)
@@ -62,7 +60,7 @@ router.post('/enroll', auth, async (req, res) => {
     // 🔍 check course exist
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+      return res.status(404).json({ message: 'Course not found' });
     }
 
     // 🔍 check already enrolled
@@ -72,14 +70,14 @@ router.post('/enroll', auth, async (req, res) => {
     });
 
     if (existing) {
-      return res.status(400).json({ message: "Already enrolled" });
+      return res.status(400).json({ message: 'Already enrolled' });
     }
 
     // 🔍 fetch user profile for storing info
     const User = require('../models/User');
     const user = await User.findOne({ firebaseId: req.userId });
     if (!user) {
-      return res.status(404).json({ message: "User profile not found" });
+      return res.status(404).json({ message: 'User profile not found' });
     }
 
     // ✅ create enrollment
@@ -104,16 +102,15 @@ router.post('/enroll', auth, async (req, res) => {
     await enrollment.save();
 
     res.json({
-      message: "Course enrolled successfully ✅",
+      message: 'Course enrolled successfully ✅',
       enrollment
     });
 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Dashboard ENROLL error (POST /api/dashboard/enroll):', error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
-
 
 // ===============================
 // ✅ 3. UPDATE PROGRESS (BONUS 🔥)
@@ -128,7 +125,7 @@ router.put('/progress', auth, async (req, res) => {
     });
 
     if (!enrollment) {
-      return res.status(404).json({ message: "Enrollment not found" });
+      return res.status(404).json({ message: 'Enrollment not found' });
     }
 
     enrollment.progress = progress;
@@ -136,13 +133,13 @@ router.put('/progress', auth, async (req, res) => {
 
     await enrollment.save();
 
-    res.json({ message: "Progress updated ✅" });
+    res.json({ message: 'Progress updated ✅' });
 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Dashboard PROGRESS error (PUT /api/dashboard/progress):', error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
 
-
 module.exports = router;
+

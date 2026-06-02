@@ -6,7 +6,19 @@ const Course = require('../../models/Course');
 const auth = require('../../middleware/auth');
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 250 * 1024 * 1024 } });
+
+
+
+router.get('/test-upload', (req, res) => {
+  res.json({
+    message: 'Upload route working'
+  });
+});
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 250 * 1024 * 1024 }
+});
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

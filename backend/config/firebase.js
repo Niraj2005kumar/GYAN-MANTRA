@@ -162,41 +162,60 @@ function createMockFirestore() {
             docs
           };
         },
-        where: (field, op, value) => {
-          let records = { ...mockData[collectionName] };
-          let filtered = {};
+        where: function(field, op, value) {
+          const conditions = [{ field, op, value }];
+          const getDocsListLocal = (records) => {
+            return Object.keys(records).map(id => ({
+              id,
+              exists: true,
+              data: () => ({ ...records[id] })
+            }));
+          };
           
-          Object.keys(records).forEach(id => {
-            const data = records[id];
-            if (op === '==') {
-              if (data[field] === value) filtered[id] = data;
-            } else if (op === '!=') {
-              if (data[field] !== value) filtered[id] = data;
-            }
-          });
-
-          const getFilteredDocs = () => getDocsList(filtered);
-
-          return {
-            limit: (num) => {
-              return {
-                get: async () => {
-                  const docs = getFilteredDocs().slice(0, num);
-                  return {
-                    empty: docs.length === 0,
-                    docs
-                  };
-                }
-              };
+          const queryBuilder = {
+            _limit: undefined,
+            where: function(f, o, v) {
+              conditions.push({ field: f, op: o, value: v });
+              return this;
             },
-            get: async () => {
-              const docs = getFilteredDocs();
+            limit: function(num) {
+              this._limit = num;
+              return this;
+            },
+            get: async function() {
+              let records = { ...mockData[collectionName] };
+              let filtered = {};
+              
+              Object.keys(records).forEach(id => {
+                const data = records[id];
+                let matches = true;
+                
+                conditions.forEach(cond => {
+                  if (cond.op === '==') {
+                    if (data[cond.field] !== cond.value) matches = false;
+                  } else if (cond.op === '!=') {
+                    if (data[cond.field] === cond.value) matches = false;
+                  }
+                });
+                
+                if (matches) {
+                  filtered[id] = data;
+                }
+              });
+              
+              let docs = getDocsListLocal(filtered);
+              if (this._limit !== undefined) {
+                docs = docs.slice(0, this._limit);
+              }
+              
               return {
                 empty: docs.length === 0,
                 docs
               };
             }
           };
+          
+          return queryBuilder;
         }
       };
     }
