@@ -106,13 +106,11 @@ const AdminUpload = () => {
     }}
   >
     <option value="">-- Choose Course --</option>
-
-    <option value="python-course">Python Course</option>
-    <option value="web-development">Web Development</option>
-    <option value="data-science">Data Science</option>
-    <option value="mathematics">Mathematics</option>
-    <option value="gate-preparation">GATE Preparation</option>
-
+    {courses.map((course) => (
+      <option key={course._id || course.id} value={course._id || course.id}>
+        {course.title}
+      </option>
+    ))}
   </select>
 </label>
 

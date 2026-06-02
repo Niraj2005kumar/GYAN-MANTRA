@@ -5,24 +5,24 @@ const coursesCollection = db.collection('courses');
 class Course {
   constructor(data = {}) {
     this._id = data._id || data.id || null;
-    this.title = data.title;
-    this.description = data.description;
-    this.videoUrl = data.videoUrl;
-    this.longDescription = data.longDescription;
-    this.price = data.price;
-    this.oldPrice = data.oldPrice;
-    this.duration = data.duration;
+    this.title = data.title || '';
+    this.description = data.description || '';
+    this.videoUrl = data.videoUrl || '';
+    this.longDescription = data.longDescription || '';
+    this.price = data.price || 0;
+    this.oldPrice = data.oldPrice || 0;
+    this.duration = data.duration || 0;
     this.rating = data.rating || 0;
     this.reviews = data.reviews || 0;
-    this.instructor = data.instructor;
-    this.instructorInitials = data.instructorInitials;
-    this.emoji = data.emoji;
-    this.color = data.color;
-    this.color2 = data.color2;
-    this.category = data.category;
-    this.level = data.level;
+    this.instructor = data.instructor || '';
+    this.instructorInitials = data.instructorInitials || '';
+    this.emoji = data.emoji || '';
+    this.color = data.color || '';
+    this.color2 = data.color2 || '';
+    this.category = data.category || '';
+    this.level = data.level || '';
     this.syllabus = data.syllabus || [];
-    this.thumbnail = data.thumbnail;
+    this.thumbnail = data.thumbnail || '';
     this.status = data.status || 'Published';
     this.students = data.students || 0;
     this.videos = data.videos || [];
@@ -42,7 +42,7 @@ class Course {
     await coursesCollection.doc(this._id).set({
       title: this.title,
       description: this.description,
-      videoUrl: this.videoUrl,
+      videoUrl: this.videoUrl || '',
       longDescription: this.longDescription,
       price: this.price,
       oldPrice: this.oldPrice,

@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
 
     // 🔥 safe mapping (avoid null course)
     const enrolledCourses = enrollments
-      .filter(e => e.courseId)
+      .filter(e => e.courseId && typeof e.courseId === 'object')
       .map(e => ({
         ...e.courseId.toObject(),
         progress: e.progress || 0,

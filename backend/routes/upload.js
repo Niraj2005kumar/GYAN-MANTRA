@@ -61,6 +61,7 @@ router.post('/upload-video', auth, upload.single('video'), async (req, res) => {
       title,
       duration: duration || '00:00',
       publicId: uploadResult.public_id,
+      videoUrl: uploadResult.secure_url,
       uploadedAt: new Date(),
       uploadedBy: req.userId
     };
