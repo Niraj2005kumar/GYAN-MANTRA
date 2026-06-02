@@ -23,6 +23,8 @@ class Course {
     this.level = data.level || '';
     this.syllabus = data.syllabus || [];
     this.thumbnail = data.thumbnail || '';
+    this.stock = data.stock || 0;
+    this.tags = data.tags || [];
     this.status = data.status || 'Published';
     this.students = data.students || 0;
     this.videos = data.videos || [];
@@ -58,6 +60,8 @@ class Course {
       level: this.level,
       syllabus: this.syllabus,
       thumbnail: this.thumbnail,
+      stock: this.stock,
+      tags: this.tags,
       status: this.status,
       students: this.students,
       videos: this.videos,
@@ -84,7 +88,7 @@ class Course {
     
     // Update only the provided fields
     const updateData = {};
-    const allowedFields = ['title', 'description', 'videoUrl', 'longDescription', 'price', 'oldPrice', 'duration', 'rating', 'reviews', 'instructor', 'instructorInitials', 'emoji', 'color', 'color2', 'category', 'level', 'syllabus', 'thumbnail', 'status', 'students', 'videos'];
+    const allowedFields = ['title', 'description', 'videoUrl', 'longDescription', 'price', 'oldPrice', 'duration', 'rating', 'reviews', 'instructor', 'instructorInitials', 'emoji', 'color', 'color2', 'category', 'level', 'syllabus', 'thumbnail', 'stock', 'tags', 'status', 'students', 'videos'];
     
     allowedFields.forEach(field => {
       if (field in data) {
@@ -121,6 +125,8 @@ class Course {
       level: this.level,
       syllabus: this.syllabus,
       thumbnail: this.thumbnail,
+      stock: this.stock,
+      tags: this.tags,
       status: this.status,
       students: this.students,
       videos: this.videos,

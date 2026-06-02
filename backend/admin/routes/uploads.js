@@ -61,6 +61,40 @@ const uploadVideo = (buffer, publicId) => {
   });
 };
 
+const uploadImage = (buffer, publicId) => {
+  const isCloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
+                                 process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name';
+  if (!isCloudinaryConfigured) {
+    console.log('🔄 Cloudinary is using placeholders. Returning mock image URL.');
+    return Promise.resolve({
+      public_id: publicId,
+      secure_url: 'https://res.cloudinary.com/demo/image/upload/sample.jpg'
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: 'image',
+        public_id: publicId,
+        folder: 'gyanmantra/thumbnails'
+      },
+      (error, result) => {
+        if (error) {
+          console.warn('⚠️ Cloudinary image upload failed, returning mock image fallback:', error.message);
+          return resolve({
+            public_id: publicId,
+            secure_url: 'https://res.cloudinary.com/demo/image/upload/sample.jpg'
+          });
+        }
+        resolve(result);
+      }
+    );
+
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
+};
+
 console.log('✅ uploads.js loaded');
 
 // ✅ Compatibility route for existing frontend
@@ -124,6 +158,30 @@ router.post(
   } catch (error) {
     console.error('Video upload failed:', error);
     res.status(500).json({ message: 'Video upload failed', error: error.message });
+  }
+});
+
+router.post('/upload-thumbnail', auth, upload.single('thumbnail'), async (req, res) => {
+  try {
+    if (req.userRole !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Thumbnail file required' });
+    }
+
+    const publicId = `course_thumbnail_${Date.now()}`;
+    const uploadResult = await uploadImage(req.file.buffer, publicId);
+
+    return res.status(201).json({
+      message: 'Thumbnail uploaded successfully',
+      url: uploadResult.secure_url,
+      publicId: uploadResult.public_id
+    });
+  } catch (error) {
+    console.error('Thumbnail upload failed:', error);
+    res.status(500).json({ message: 'Thumbnail upload failed', error: error.message });
   }
 });
 

@@ -119,10 +119,16 @@ router.put('/progress', auth, async (req, res) => {
   try {
     const { courseId, progress } = req.body;
 
+    console.log("REQ USER:", req.userId);
+    console.log("REQ COURSE:", courseId);
+    console.log("REQ PROGRESS:", progress);
+
     const enrollment = await Enrollment.findOne({
       userId: req.userId,
       courseId
     });
+
+    console.log("FOUND ENROLLMENT:", enrollment);
 
     if (!enrollment) {
       return res.status(404).json({ message: 'Enrollment not found' });
@@ -133,10 +139,12 @@ router.put('/progress', auth, async (req, res) => {
 
     await enrollment.save();
 
+    console.log("UPDATED ENROLLMENT:", enrollment);
+
     res.json({ message: 'Progress updated ✅' });
 
   } catch (error) {
-    console.error('Dashboard PROGRESS error (PUT /api/dashboard/progress):', error);
+    console.error("PROGRESS ERROR:", error);
     res.status(500).json({ message: error.message || 'Server error' });
   }
 });

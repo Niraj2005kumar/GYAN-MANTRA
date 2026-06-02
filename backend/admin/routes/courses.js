@@ -1,6 +1,7 @@
 const express = require('express');
 const Course = require('../../models/Course');
 const auth = require('../../middleware/auth');
+const { db } = require('../../config/firebase');
 
 const router = express.Router();
 
@@ -29,6 +30,8 @@ router.post('/courses', auth, async (req, res) => {
       level: courseData.level,
       syllabus: courseData.syllabus || [],
       thumbnail: courseData.thumbnail,
+      stock: courseData.stock || 0,
+      tags: courseData.tags || [],
       status: courseData.status || 'Published',
       students: courseData.students || 0,
       videos: courseData.videos || []
@@ -39,6 +42,69 @@ router.post('/courses', auth, async (req, res) => {
   } catch (error) {
     console.error('Create course error:', error);
     res.status(500).json({ message: 'Unable to create course' });
+  }
+});
+
+router.get('/analytics', auth, async (req, res) => {
+  try {
+    if (req.userRole !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    const courses = await Course.find();
+    const totalCourses = courses.length;
+
+    const usersSnapshot = await db.collection('users').get();
+    const totalStudents = usersSnapshot.size;
+
+    const enrollmentsSnapshot = await db.collection('enrollments').get();
+    const enrollments = enrollmentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const totalEnrollments = enrollments.length;
+
+    const completedCourses = enrollments.filter(e => Number(e.progress) === 100).length;
+    const averageProgress = totalEnrollments > 0
+      ? Math.round(enrollments.reduce((sum, e) => sum + (Number(e.progress) || 0), 0) / totalEnrollments)
+      : 0;
+
+    const totalRevenue = enrollments.reduce((sum, e) => sum + (Number(e.courseInfo?.price) || 0), 0);
+
+    const recentCourses = courses
+      .slice()
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 5)
+      .map(course => ({
+        id: course._id,
+        title: course.title,
+        category: course.category,
+        price: course.price,
+        createdAt: course.createdAt
+      }));
+
+    const recentEnrollments = enrollments
+      .slice()
+      .sort((a, b) => new Date(b.enrolledAt) - new Date(a.enrolledAt))
+      .slice(0, 5)
+      .map(enrollment => ({
+        id: enrollment.id,
+        courseTitle: enrollment.courseInfo?.title || 'Unknown Course',
+        studentName: enrollment.userInfo?.name || 'Unknown Student',
+        progress: enrollment.progress || 0,
+        enrolledAt: enrollment.enrolledAt
+      }));
+
+    res.json({
+      totalCourses,
+      totalStudents,
+      totalEnrollments,
+      completedCourses,
+      averageProgress,
+      totalRevenue,
+      recentCourses,
+      recentEnrollments
+    });
+  } catch (error) {
+    console.error('Analytics error:', error);
+    res.status(500).json({ message: 'Unable to fetch analytics' });
   }
 });
 
