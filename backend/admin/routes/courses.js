@@ -38,7 +38,7 @@ router.post('/courses', auth, async (req, res) => {
     });
 
     await course.save();
-    res.status(201).json(course);
+    res.status(201).json(typeof course.toObject === 'function' ? course.toObject() : course);
   } catch (error) {
     console.error('Create course error:', error);
     res.status(500).json({ message: 'Unable to create course' });
@@ -123,7 +123,7 @@ router.put('/courses/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    res.json(course);
+    res.json(typeof course.toObject === 'function' ? course.toObject() : course);
   } catch (error) {
     console.error('Update course error:', error);
     res.status(500).json({ message: 'Unable to update course' });

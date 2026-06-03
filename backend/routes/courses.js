@@ -20,7 +20,8 @@ router.get('/:id', async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) return res.status(404).json({ message: 'Course not found' });
-    res.json(course);
+    // Return a plain object with the course fields to guarantee consistent JSON shape
+    res.json(typeof course.toObject === 'function' ? course.toObject() : course);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

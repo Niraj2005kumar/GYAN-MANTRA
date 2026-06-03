@@ -31,31 +31,10 @@ router.get('/:courseId', auth, async (req, res) => {
       return res.status(404).json({ message: 'Video lesson not available' });
     }
 
-    const expiresAt = Math.floor(Date.now() / 1000) + 600;
-    let signedUrl;
-    
-    const isCloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
-                                   process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name';
-    if (isCloudinaryConfigured) {
-      try {
-        signedUrl = cloudinary.url(publicId, {
-          resource_type: 'video',
-          type: 'authenticated',
-          sign_url: true,
-          secure: true,
-          expires_at: expiresAt
-        });
-      } catch (err) {
-        console.warn('⚠️ Cloudinary URL signing failed, falling back:', err.message);
-        signedUrl = video.videoUrl || 'https://res.cloudinary.com/demo/video/upload/dog.mp4';
-      }
-    } else {
-      signedUrl = video.videoUrl || 'https://res.cloudinary.com/demo/video/upload/dog.mp4';
-    }
+    const publicUrl = video.videoUrl || 'https://res.cloudinary.com/demo/video/upload/dog.mp4';
 
     res.json({
-      url: signedUrl,
-      expiresAt,
+      url: publicUrl,
       lesson: video,
       courseId: course._id,
       courseTitle: course.title,
