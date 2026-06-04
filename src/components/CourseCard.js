@@ -6,8 +6,14 @@ const CourseCard = ({ course }) => {
 
   return (
     <div className="card" onClick={() => navigate(`/course/${course.id}`)}>
-      <div style={{ height: 180, background: `linear-gradient(135deg, ${course.color})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', position: 'relative' }}>
-        <span>{course.emoji}</span>
+      <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}>
+        {course.thumbnail ? (
+          <img src={course.thumbnail} alt={course.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', background: `linear-gradient(135deg, ${course.color})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem' }}>
+            <span>{course.emoji}</span>
+          </div>
+        )}
         {course.badge && <div style={{ position: 'absolute', top: 12, left: 12, background: 'var(--acc)', color: '#fff', fontSize: '0.68rem', fontWeight: 700, padding: '4px 10px', borderRadius: 100 }}>{course.badge}</div>}
       </div>
       <div style={{ padding: 20 }}>

@@ -146,7 +146,7 @@ const CoursePlayer = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
                 <div>
                   <h2 style={{ margin: 0 }}>{currentLessonData.title || `Lesson ${currentLesson + 1}`}</h2>
-                  <p style={{ color: '#9ca3af', margin: '4px 0 0 0' }}>Duration: {currentLessonData.duration || 'Unknown duration'}</p>
+                  <p style={{ color: '#9ca3af', margin: '4px 0 0 0' }}>Duration: {currentLessonData.duration || '00:00'}</p>
                 </div>
                 <button
                   onClick={handleToggleComplete}

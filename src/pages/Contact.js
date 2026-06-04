@@ -12,52 +12,83 @@ const Contact = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validation
-    if (!formData.name.trim()) {
-      setSubmitStatus('error');
-      alert('Please enter your name');
-      return;
-    }
-    if (!formData.email.trim() || !formData.email.includes('@')) {
-      setSubmitStatus('error');
-      alert('Please enter a valid email address');
-      return;
-    }
-    if (!formData.message.trim()) {
-      setSubmitStatus('error');
-      alert('Please enter your message');
-      return;
+  e.preventDefault();
+
+  // Validation
+  if (!formData.name.trim()) {
+    setSubmitStatus("error");
+    alert("Please enter your name");
+    return;
+  }
+
+  if (!formData.email.trim() || !formData.email.includes("@")) {
+    setSubmitStatus("error");
+    alert("Please enter a valid email address");
+    return;
+  }
+
+  if (!formData.message.trim()) {
+    setSubmitStatus("error");
+    alert("Please enter your message");
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    const response = await fetch(
+      "https://formsubmit.co/ajax/nirajverma075@gmail.com",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        body: new FormData(e.target),
+      }
+    );
+
+    if (response.ok) {
+      setSubmitStatus("success");
+
+      alert("✅ Message sent successfully!");
+
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+
+    } else {
+      setSubmitStatus("error");
+      alert("❌ Failed to send message.");
     }
 
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setSubmitStatus('success');
-      alert('✅ Message sent successfully! We will get back to you soon.');
-      setFormData({ name: '', email: '', message: '' });
-      setIsSubmitting(false);
-      
-      // Clear success status after 3 seconds
-      setTimeout(() => setSubmitStatus(null), 3000);
-    }, 1000);
+  } catch (error) {
+    console.log(error);
+    setSubmitStatus("error");
+    alert("❌ Something went wrong.");
+  }
+
+  setIsSubmitting(false);
   };
 
   const contactInfo = [
     { icon: '📧', title: 'Email Us', details: ['gyanmaantra2@gmail.com'], link: 'mailto:gyanmaantra2@gmail.com' },
     { icon: '📞', title: 'Call Us', details: ['+91 8882753535', '+91 8383008436'], link: 'tel:+918882753535' },
-    { icon: '📍', title: 'Visit Us', details: ['Bengaluru, India'], link: 'https://maps.google.com/?q=Bengaluru+India' },
+    { icon: '📍', title: 'Visit Us', details: ['Aya nage New delhi, India'], link: 'https://maps.google.com/?q=Bengaluru+India' },
     { icon: '⏰', title: 'Business Hours', details: ['Mon-Fri: 9AM - 7PM', 'Sat: 10AM - 4PM'] }
   ];
 
   const socialLinks = [
     { name: 'Facebook', icon: 'fab fa-facebook-f', url: 'https://facebook.com', color: '#1877f2' },
     { name: 'Twitter', icon: 'fab fa-twitter', url: 'https://twitter.com', color: '#1da1f2' },
-    { name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://linkedin.com', color: '#0077b5' },
-    { name: 'Instagram', icon: 'fab fa-instagram', url: 'https://instagram.com', color: '#e4405f' },
-    { name: 'YouTube', icon: 'fab fa-youtube', url: 'https://youtube.com', color: '#ff0000' }
+    { name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/company/gyan-maantra/', color: '#0077b5' },
+    { name: 'Instagram', icon: 'fab fa-instagram', url: '', color: '#e4405f' },
+    { name: 'YouTube', icon: 'fab fa-youtube', url: 'https://www.youtube.com/@GyanMaantra', color: '#ff0000' }
   ];
 
   return (
@@ -244,6 +275,17 @@ const Contact = () => {
             </p>
 
             <form onSubmit={handleSubmit}>
+              <input
+                type="hidden"
+                name="_subject"
+                value="📚 New Student Enquiry - Gyan Mantra"
+              />
+
+                <input
+                type="hidden"
+                name="_captcha"
+                value="false"
+                />
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ 
                   display: 'block', 

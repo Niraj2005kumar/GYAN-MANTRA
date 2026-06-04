@@ -4,8 +4,8 @@ import { blogPosts } from '../data/mockData';
 const Blog = () => {
   return (
     <div className="container" style={{ padding: '60px 0' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '16px', textAlign: 'center' }}>Blog & Resources</h1>
-      <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '48px' }}>Latest insights from our experts</p>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '16px', textAlign: 'center' }}>Study Materials & Tips</h1>
+      <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '48px' }}>Expert guidance and study strategies for academic success.</p>
       <div className="grid">
         {blogPosts.map((post, idx) => (
           <div key={idx} className="card" style={{ padding: '24px' }}>

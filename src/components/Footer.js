@@ -34,7 +34,7 @@ const Footer = () => {
             }}>
               <img 
                 src="/logo.jpeg" 
-                alt="Gyan Mantra Logo" 
+                alt="Gyan Maantra Logo" 
                 style={{
                   width: '140px',
                   height: 'auto',
@@ -69,7 +69,9 @@ const Footer = () => {
               maxWidth: '280px',
               marginBottom: '24px'
             }}>
-              India's leading online learning platform. We help students master new skills and achieve their career goals.
+              Gyan Maantra is a trusted learning platform
+              for Class 8th–12th students and aspirants
+              preparing for JEE Main, JEE Advanced & NDA.
             </p>
             
             {/* Social Links */}
@@ -123,7 +125,7 @@ const Footer = () => {
               flexDirection: 'column',
               gap: '12px'
             }}>
-              {['Web Development', 'Data Science', 'Python Programming', 'Mathematics', 'GATE Preparation'].map(course => (
+              {['Class 8th', 'Class 9th', 'Class 10th', 'Class 11th', 'Class 12th', 'JEE Main', 'JEE Advanced', 'NDA Preparation'].map(course => (
                 <li key={course}>
                   <Link 
                     to="/courses" 
@@ -204,7 +206,7 @@ const Footer = () => {
             }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '18px' }}>📍</span>
-                <span style={{ fontSize: '14px', opacity: 0.7 }}>Bengaluru, Karnataka, India</span>
+                <span style={{ fontSize: '14px', opacity: 0.7 }}>Aya Nagar new Delhi, India</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '18px' }}>📧</span>
@@ -225,7 +227,7 @@ const Footer = () => {
                     fontSize: '14px',
                     display: 'block'
                   }}>
-                    +91 88827 53535
+                    +91 8882753535
                   </a>
                   <a href="tel:+918383008436" style={{
                     color: 'rgba(255,255,255,0.7)',
@@ -257,7 +259,7 @@ const Footer = () => {
             opacity: 0.5,
             margin: 0
           }}>
-            © {currentYear} Gyan Mantra. All rights reserved.
+            © {currentYear} Gyan Maantra. All rights reserved.
           </p>
           
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>

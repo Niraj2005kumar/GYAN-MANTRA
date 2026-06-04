@@ -1,63 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useCourses from '../hooks/useCourses';
 
 const Home = () => {
-  // Sample courses data (inline for simplicity)
-  const featuredCourses = [
-    {
-      id: 1,
-      title: 'Full Stack Web Development',
-      instructor: 'Rahul Pathak',
-      price: 1499,
-      rating: 4.9,
-      students: 12480,
-      image: 'https://picsum.photos/id/0/300/200',
-      badge: 'Bestseller'
-    },
-    {
-      id: 2,
-      title: 'Python Programming Mastery',
-      instructor: 'Vikram Anand',
-      price: 799,
-      rating: 4.8,
-      students: 8120,
-      image: 'https://picsum.photos/id/1/300/200',
-      badge: 'Popular'
-    },
-    {
-      id: 3,
-      title: 'Mathematics for GATE',
-      instructor: 'Dr. Meera Nair',
-      price: 999,
-      rating: 4.9,
-      students: 6240,
-      image: 'https://picsum.photos/id/20/300/200',
-      badge: 'Top Rated'
-    }
+  const { courses, loading } = useCourses();
+  const featuredCourses = courses.slice(0, 3);
+
+  const feedbackHighlights = [
+    { icon: '🎯', text: 'Course content centered on real-world skills.' },
+    { icon: '📚', text: 'Lessons designed for steady learning progress.' },
+    { icon: '🚀', text: 'Clear paths to build practical knowledge.' }
   ];
 
-  const testimonials = [
-    {
-      text: "This platform changed my career! The courses are excellent and instructors are very supportive.",
-      author: "Arjun Sharma",
-      role: "Software Engineer",
-      rating: 5,
-      initial: "AS"
-    },
-    {
-      text: "Best online learning platform in India. The GATE preparation course helped me crack the exam.",
-      author: "Priya Mehta",
-      role: "GATE Qualified",
-      rating: 5,
-      initial: "PM"
-    },
-    {
-      text: "Very affordable and high-quality content. The Python course is amazing!",
-      author: "Rahul Verma",
-      role: "Data Analyst",
-      rating: 5,
-      initial: "RV"
-    }
+  const instructorHighlights = [
+  {
+    title: 'Class 8th–12th Education',
+    subtitle: 'Complete syllabus coverage with expert guidance.'
+  },
+  {
+    title: 'JEE Main & Advanced',
+    subtitle: 'Concept-based preparation with regular practice.'
+  },
+  {
+    title: 'NDA Preparation',
+    subtitle: 'Focused training for NDA written examination.'
+  },
+  {
+    title: 'Mock Tests & Performance',
+    subtitle: 'Track progress and improve exam readiness.'
+  }
   ];
 
   return (
@@ -88,7 +59,7 @@ const Home = () => {
               fontSize: '14px',
               marginBottom: '20px'
             }}>
-              🎓 India's #1 EdTech Platform
+              🎓 Class 5th–12th | JEE & NDA Academy
             </div>
             
             <h1 style={{
@@ -97,9 +68,9 @@ const Home = () => {
               marginBottom: '20px',
               lineHeight: '1.2'
             }}>
-              Learn Programming &{' '}
-              <span style={{ color: '#fbbf24' }}>Mathematics</span>
-              <br />from Experts
+              Master School Education &{' '}
+              <span style={{ color: '#fbbf24' }}>JEE | NDA</span>
+              <br />Preparation
             </h1>
             
             <p style={{
@@ -108,8 +79,9 @@ const Home = () => {
               marginBottom: '30px',
               lineHeight: '1.6'
             }}>
-              Master in-demand skills with 500+ expert-led courses. 
-              Interactive lessons, live sessions, and industry-recognized certificates.
+              Complete courses for Class 5th to 12th along with
+              JEE Main, JEE Advanced, and NDA preparation with
+              expert guidance and regular mock tests.
             </p>
             
             <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '40px' }}>
@@ -125,7 +97,7 @@ const Home = () => {
                   cursor: 'pointer',
                   transition: 'transform 0.2s'
                 }}>
-                  Explore Courses →
+                  Browse Courses →
                 </button>
               </Link>
               
@@ -140,16 +112,16 @@ const Home = () => {
                   fontWeight: 'bold',
                   cursor: 'pointer'
                 }}>
-                  Join Free Today
+                  Start Learning
                 </button>
               </Link>
             </div>
             
             <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>50K+</span><br />Students</div>
-              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>500+</span><br />Courses</div>
-              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>120+</span><br />Instructors</div>
-              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>4.9★</span><br />Rating</div>
+              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>Class 5th–12th</span><br />Complete Syllabus</div>
+              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>JEE Main & Advanced</span><br />Preparation</div>
+              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>NDA</span><br />Preparation</div>
+              <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>Mock Test</span><br />Performance</div>
             </div>
           </div>
           
@@ -174,30 +146,30 @@ const Home = () => {
                 justifyContent: 'center',
                 fontWeight: 'bold',
                 fontSize: '18px'
-              }}>RS</div>
+              }}>GM</div>
               <div>
-                <h4 style={{ margin: 0 }}>My Learning Path</h4>
-                <p style={{ margin: 0, fontSize: '12px', opacity: 0.7 }}>Full Stack Developer Track</p>
+                <h4 style={{ margin: 0 }}>Exam Preparation</h4>
+                <p style={{ margin: 0, fontSize: '12px', opacity: 0.7 }}>Structured preparation for every student.</p>
               </div>
             </div>
             
             <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '10px', height: '8px', marginBottom: '10px' }}>
               <div style={{ width: '68%', height: '100%', background: 'linear-gradient(90deg, #f59e0b, #10b981)', borderRadius: '10px' }}></div>
             </div>
-            <p style={{ fontSize: '14px', marginBottom: '20px' }}>68% Complete — Keep going! 🚀</p>
+            <p style={{ fontSize: '14px', marginBottom: '20px' }}>Structured learning with measurable progress and clear outcomes.</p>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.08)', padding: '10px', borderRadius: '10px' }}>
                 <span style={{ fontSize: '20px' }}>✅</span>
-                <div><strong>HTML & CSS Foundations</strong><br /><span style={{ fontSize: '12px' }}>Completed</span></div>
+                <div><strong>Complete Syllabus</strong><br /><span style={{ fontSize: '12px' }}>Class 5th to 12th</span></div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.08)', padding: '10px', borderRadius: '10px' }}>
                 <span style={{ fontSize: '20px' }}>▶️</span>
-                <div><strong>JavaScript Essentials</strong><br /><span style={{ fontSize: '12px' }}>In Progress</span></div>
+                <div><strong>Daily Practice Tests</strong><br /><span style={{ fontSize: '12px' }}>Improve Every Day</span></div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.08)', padding: '10px', borderRadius: '10px' }}>
-                <span style={{ fontSize: '20px' }}>🔒</span>
-                <div><strong>React.js Advanced</strong><br /><span style={{ fontSize: '12px' }}>Locked</span></div>
+                <span style={{ fontSize: '20px' }}>📈</span>
+                <div><strong>Performance Analysis</strong><br /><span style={{ fontSize: '12px' }}>Track Your Progress</span></div>
               </div>
             </div>
           </div>
@@ -234,16 +206,16 @@ const Home = () => {
               }}
               onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                <img src={course.image} alt={course.title} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
+                <img src={course.thumbnail || `https://picsum.photos/seed/${course.id}/300/200`} alt={course.title} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
                 <div style={{ padding: '20px' }}>
                   {course.badge && (
                     <span style={{ background: '#fef3c7', color: '#d97706', padding: '3px 10px', borderRadius: '50px', fontSize: '11px', fontWeight: 'bold' }}>{course.badge}</span>
                   )}
                   <h3 style={{ marginTop: '10px', marginBottom: '8px', fontSize: '18px' }}>{course.title}</h3>
-                  <p style={{ color: '#666', fontSize: '14px', marginBottom: '10px' }}>{course.instructor}</p>
+                  <p style={{ color: '#666', fontSize: '14px', marginBottom: '10px' }}>{course.instructor || 'Instructor'}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                    <span style={{ color: '#f59e0b' }}>⭐ {course.rating} ({course.students.toLocaleString()} students)</span>
-                    <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#4f46e5' }}>₹{course.price}</span>
+                    <span style={{ color: '#f59e0b' }}>⭐ {course.rating || 0}</span>
+                    <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#4f46e5' }}>{course.price ? `₹${course.price}` : 'Free'}</span>
                   </div>
                   <Link to={`/course/${course.id}`}>
                     <button style={{
@@ -268,8 +240,10 @@ const Home = () => {
       <div style={{ padding: '80px 5%', background: '#f8fafc' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span style={{ background: '#e0e7ff', color: '#4f46e5', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', fontWeight: 'bold' }}>💬 Reviews</span>
-            <h2 style={{ fontSize: '32px', marginTop: '15px' }}>What Our <span style={{ color: '#4f46e5' }}>Students Say</span></h2>
+            <span style={{ background: '#e0e7ff', color: '#4f46e5', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', fontWeight: 'bold' }}>🏆 Why Choose Gyan Maantra</span>
+            <h2 style={{ fontSize: '32px', marginTop: '15px' }}>Why Students Choose <span style={{ color: '#4f46e5' }}>Gyan Maantra</span></h2>
+            <p style={{ color: '#475569' }}>Expert guidance, structured learning, and regular practice
+                  for Class 5th–12th, JEE Main, JEE Advanced, and NDA aspirants.</p>
           </div>
           
           <div style={{
@@ -277,33 +251,15 @@ const Home = () => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '30px'
           }}>
-            {testimonials.map((t, i) => (
+            {feedbackHighlights.map((item, i) => (
               <div key={i} style={{
                 background: 'white',
                 borderRadius: '20px',
                 padding: '30px',
                 boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
               }}>
-                <div style={{ fontSize: '40px', color: '#c7d2fe', marginBottom: '15px' }}>"</div>
-                <p style={{ color: '#475569', lineHeight: '1.6', marginBottom: '20px' }}>{t.text}</p>
-                <div style={{ color: '#f59e0b', marginBottom: '15px' }}>{'★'.repeat(t.rating)}</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '45px',
-                    height: '45px',
-                    background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}>{t.initial}</div>
-                  <div>
-                    <h5 style={{ margin: 0 }}>{t.author}</h5>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>{t.role}</p>
-                  </div>
-                </div>
+                <div style={{ fontSize: '40px', color: '#c7d2fe', marginBottom: '15px' }}>{item.icon}</div>
+                <p style={{ color: '#475569', lineHeight: '1.6', marginBottom: '20px' }}>{item.text}</p>
               </div>
             ))}
           </div>
@@ -314,8 +270,8 @@ const Home = () => {
       <div style={{ padding: '80px 5%', background: '#ffffff' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span style={{ background: '#e0e7ff', color: '#4f46e5', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', fontWeight: 'bold' }}>👨‍🏫 Expert Instructors</span>
-            <h2 style={{ fontSize: '32px', marginTop: '15px' }}>Learn from the <span style={{ color: '#4f46e5' }}>Best</span></h2>
+            <span style={{ background: '#e0e7ff', color: '#4f46e5', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', fontWeight: 'bold' }}>👨‍🏫 Expert Faculty</span>
+            <h2 style={{ fontSize: '32px', marginTop: '15px' }}>Learn from Expert <span style={{ color: '#4f46e5' }}>Educators</span></h2>
           </div>
           
           <div style={{
@@ -323,12 +279,7 @@ const Home = () => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
             gap: '30px'
           }}>
-            {[
-              { name: 'Rahul Pathak', title: 'Full Stack Expert', students: '14K+', rating: '4.9', initial: 'RP' },
-              { name: 'Dr. Meera Nair', title: 'Mathematics Professor', students: '9K+', rating: '4.8', initial: 'MN' },
-              { name: 'Vikram Anand', title: 'Python Specialist', students: '7K+', rating: '4.7', initial: 'VA' },
-              { name: 'Ananya Singh', title: 'ML & AI Expert', students: '5K+', rating: '4.9', initial: 'AS' }
-            ].map((inst, i) => (
+            {instructorHighlights.map((inst, i) => (
               <div key={i} style={{
                 textAlign: 'center',
                 background: '#f8fafc',
@@ -348,13 +299,9 @@ const Home = () => {
                   color: 'white',
                   fontSize: '24px',
                   fontWeight: 'bold'
-                }}>{inst.initial}</div>
-                <h3 style={{ marginBottom: '5px' }}>{inst.name}</h3>
-                <p style={{ color: '#4f46e5', marginBottom: '15px' }}>{inst.title}</p>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '12px', color: '#666' }}>
-                  <div><strong>{inst.students}</strong><br />Students</div>
-                  <div><strong>{inst.rating}★</strong><br />Rating</div>
-                </div>
+                }}>{inst.title.charAt(0)}</div>
+                <h3 style={{ marginBottom: '5px' }}>{inst.title}</h3>
+                <p style={{ color: '#4f46e5', marginBottom: '15px' }}>{inst.subtitle}</p>
               </div>
             ))}
           </div>
@@ -369,9 +316,10 @@ const Home = () => {
         color: 'white'
       }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <span style={{ background: 'rgba(255,255,255,0.15)', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', display: 'inline-block', marginBottom: '20px' }}>🚀 Start Your Journey</span>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', marginBottom: '15px' }}>Ready to <span style={{ color: '#fbbf24' }}>Transform</span> Your Career?</h2>
-          <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '30px' }}>Join 50,000+ students already learning on EduNova.</p>
+          <span style={{ background: 'rgba(255,255,255,0.15)', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', display: 'inline-block', marginBottom: '20px' }}>🎓 Start Your Learning Journey </span>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', marginBottom: '15px' }}>Start Your<span style={{ color: '#fbbf24' }}> Journey</span> to Success</h2>
+          <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '30px' }}>Join thousands of students preparing for
+                      Class 8th–12th, JEE Main, JEE Advanced & NDA.</p>
           <Link to="/signup">
             <button style={{
               background: '#f59e0b',
@@ -382,7 +330,7 @@ const Home = () => {
               fontSize: '18px',
               fontWeight: 'bold',
               cursor: 'pointer'
-            }}>Enroll Now — It's Free 🎯</button>
+            }}>Enroll Now 🚀</button>
           </Link>
         </div>
       </div>

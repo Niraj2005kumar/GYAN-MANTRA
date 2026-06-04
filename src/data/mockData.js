@@ -121,28 +121,28 @@ export const instructors = [
 
 export const blogPosts = [
   { 
-    cat: "Career Tips", 
+    cat: "BOARD EXAMS", 
     emoji: "💼", 
-    title: "10 Skills Every Web Developer Needs in 2024", 
-    excerpt: "The tech landscape is evolving fast. Here are the must-have skills that will make you stand out.", 
-    date: "Dec 10, 2024", 
-    readTime: "6 min read" 
+    title: "Top 10 Tips to Score Better in Board Exams", 
+    excerpt: "Simple and effective strategies to improve your performance in Class 8th–12th exams.", 
+    date: "", 
+    readTime: "" 
   },
   { 
     cat: "Study Tips", 
     emoji: "📖", 
     title: "How to Crack GATE 2025: A Complete Roadmap", 
     excerpt: "A month-by-month preparation strategy from GATE toppers.", 
-    date: "Dec 8, 2024", 
-    readTime: "12 min read" 
+    date: "", 
+    readTime: "" 
   },
   { 
-    cat: "Python", 
-    emoji: "🐍", 
-    title: "Python in 2025: What's New and Why It Still Dominates", 
-    excerpt: "Python 3.13 introduced major performance improvements.", 
-    date: "Dec 5, 2024", 
-    readTime: "8 min read" 
+    cat: "NDA", 
+    emoji: "🪖", 
+    title: "Complete Guide to NDA Preparation", 
+    excerpt: "Learn the right approach and preparation strategy for the NDA written examination.", 
+    date: "", 
+    readTime: "" 
   }
 ];
 

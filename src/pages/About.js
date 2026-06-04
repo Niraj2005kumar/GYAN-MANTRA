@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import rishavImg from './image/rishav.jpg';
+import tusharImg from './image/Tushar.jpeg';
+import nirajImg from './image/niraj.png';
+
 const About = () => {
   const stats = [
     { number: '50K+', label: 'Happy Students' },
@@ -10,10 +14,22 @@ const About = () => {
   ];
 
   const teamMembers = [
-    { name: 'Dr. Rajesh Kumar', role: 'Founder & CEO', image: 'https://randomuser.me/api/portraits/men/32.jpg' },
-    { name: 'Prof. Priya Sharma', role: 'Head of Academics', image: 'https://randomuser.me/api/portraits/women/68.jpg' },
-    { name: 'Amit Verma', role: 'Lead Instructor', image: 'https://randomuser.me/api/portraits/men/45.jpg' },
-    { name: 'Neha Gupta', role: 'Curriculum Designer', image: 'https://randomuser.me/api/portraits/women/28.jpg' }
+     {
+    name: 'Rishabh Anand',
+    role: 'Founder & JEE | NDA Mentor',
+    image: rishavImg
+  },
+  {
+    name: 'Tushar Chaurasia',
+    role: 'Academic Mentor | Class 8th–12th Faculty',
+    image: tusharImg
+  },
+  {
+    name: 'Niraj Verma',
+    role: 'Niraj Verma | Technical Lead & Web Developer',
+    image: nirajImg
+  }
+    
   ];
 
   return (
@@ -31,7 +47,7 @@ const About = () => {
             marginBottom: '20px',
             fontWeight: '700'
           }}>
-            About Gyan Mantra
+            About Gyan Maantra
           </h1>
           <p style={{ 
             fontSize: 'clamp(1rem, 3vw, 1.25rem)', 
@@ -71,8 +87,11 @@ const About = () => {
               marginBottom: '20px',
               color: '#4b5563'
             }}>
-              Gyan Mantra was founded in 2020 with a simple yet powerful vision — to make 
-              quality education accessible to everyone, regardless of their location or background.
+              Gyan Maantra was founded with a clear vision — to provide quality education built on strong concepts, discipline, 
+              and consistent academic growth. From the beginning, the focus has been on personalized learning and individual attention. 
+              With small batch sizes and structured guidance, students receive the support they need to build a solid academic foundation. 
+              Over the years, Gyan Maantra has developed into a trusted learning platform where students are guided not only to complete their
+             syllabus but to truly understand and master it.
             </p>
             <p style={{ 
               fontSize: '1rem', 
@@ -80,8 +99,7 @@ const About = () => {
               marginBottom: '20px',
               color: '#4b5563'
             }}>
-              What started as a small initiative with just 5 courses has now grown into 
-              India's #1 EdTech platform, serving over 50,000+ students across the country.
+              Starting with just a handful of students, Gyan Maantra has grown to serve thousands of learners across India.
             </p>
             <p style={{ 
               fontSize: '1rem', 
@@ -89,8 +107,7 @@ const About = () => {
               marginBottom: '20px',
               color: '#4b5563'
             }}>
-              Our team of 120+ expert instructors works tirelessly to create industry-relevant 
-              content that helps students build real-world skills and advance their careers.
+              Our commitment to quality education, expert instructors, and student success has been the driving force behind our growth and impact.
             </p>
             
             <h3 style={{ 
@@ -105,8 +122,18 @@ const About = () => {
               lineHeight: '1.7', 
               color: '#4b5563'
             }}>
-              To democratize education by providing affordable, high-quality learning experiences 
-              that transform lives and build future-ready professionals.
+             At Gyan Maantra, our mission is to help students unlock their true potential through quality education and expert mentorship.
+            <br /><br />
+              • Strong fundamentals and conceptual clarity.
+              <br />
+              • Personalized guidance from experienced educators.
+              <br />
+              • Regular practice, mock tests, and performance analysis.
+              <br />
+              • Effective preparation for Class 8th–12th, JEE Main, JEE Advanced, and NDA.
+              <br /><br />
+              We believe that every student has the ability to succeed.
+              With the right support, discipline, and dedication, students can achieve academic excellence and confidently move toward their dreams.
             </p>
 
             <h3 style={{ 
@@ -117,12 +144,23 @@ const About = () => {
               💡 Our Vision
             </h3>
             <p style={{ 
-              fontSize: '1rem', 
-              lineHeight: '1.7', 
+               
+              
               color: '#4b5563'
             }}>
-              To become the most trusted and innovative learning platform that empowers 1 million+ 
-              learners to achieve their dreams by 2030.
+              Our vision is to become one of the most trusted and result-driven educational institutes, inspiring students to achieve academic excellence and build a brighter future.
+              <br /><br />
+              We aim to create a learning environment where:
+              <br /><br />
+              • Students feel motivated, confident, and eager to learn.
+              <br />
+              • Progress is regularly monitored through practice and assessments.
+              <br />
+              • Parents stay informed with transparent academic updates.
+              <br />
+              • Education nurtures knowledge, discipline, character, and long-term success.
+              <br /><br />
+              At Gyan Maantra, we believe that quality guidance and consistent effort can help every student reach their highest potential.
             </p>
           </div>
           
@@ -187,7 +225,7 @@ const About = () => {
             marginBottom: '48px',
             color: '#1f2937'
           }}>
-            What Makes Us Different?
+            Why Choose Gyan Maantra?
           </h2>
           <div style={{
             display: 'grid',
@@ -195,10 +233,10 @@ const About = () => {
             gap: '32px'
           }}>
             {[
-              { emoji: '🎓', title: 'Expert Instructors', desc: 'Learn from industry professionals with years of real-world experience' },
-              { emoji: '📱', title: 'Learn Anywhere', desc: 'Access courses on mobile, tablet, or desktop - anytime, anywhere' },
-              { emoji: '🏆', title: 'Certification', desc: 'Earn industry-recognized certificates upon course completion' },
-              { emoji: '💬', title: '24/7 Support', desc: 'Get your doubts cleared anytime with our dedicated support team' }
+              { emoji: '🎓', title: 'Expert Faculty', desc: 'Learn from experienced educators dedicated to Class 8th–12th, JEE Main, JEE Advanced & NDA' },
+              { emoji: '📱', title: 'Structured Learning', desc: 'Well-planned classes, notes, and regular practice to ensure steady academic growth.' },
+              { emoji: '🏆', title: 'Mock Tests & Analysis', desc: 'Regular tests and performance tracking to improve exam readiness.' },
+              { emoji: '💬', title: 'Doubt Solving Support', desc: 'Quick and effective guidance to help students overcome learning challenges.' }
             ].map((item, index) => (
               <div key={index} style={{
                 background: 'white',
@@ -231,7 +269,8 @@ const About = () => {
             Meet Our Leadership Team
           </h2>
           <p style={{ textAlign: 'center', color: '#6b7280', marginBottom: '48px' }}>
-            Passionate educators dedicated to your success
+            Experienced mentors committed to helping
+            students achieve academic excellence.
           </p>
           <div style={{
             display: 'grid',
@@ -268,10 +307,11 @@ const About = () => {
           color: 'white'
         }}>
           <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', marginBottom: '16px' }}>
-            Ready to Start Your Learning Journey?
+            Start Your Journey Towards Success
           </h2>
           <p style={{ marginBottom: '32px', opacity: 0.95, fontSize: '1.1rem' }}>
-            Join 50,000+ students already learning on Gyan Mantra
+            Join students preparing for
+            Class 8th–12th, JEE Main, JEE Advanced & NDA.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/courses">
@@ -289,7 +329,7 @@ const About = () => {
               onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
               onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
               >
-                Explore Courses →
+                View Courses →
               </button>
             </Link>
             <Link to="/signup">
@@ -303,7 +343,7 @@ const About = () => {
                 fontWeight: '600',
                 cursor: 'pointer'
               }}>
-                Join Free Today
+                Join Free Demo
               </button>
             </Link>
           </div>

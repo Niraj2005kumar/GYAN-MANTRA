@@ -71,7 +71,10 @@ const AdminCourses = () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
 
-    return response.data.thumbnailUrl || response.data.url || '';
+    const url = response.data.thumbnailUrl || response.data.url || '';
+    // store returned url in form.thumbnailUrl for visibility
+    setForm((prev) => ({ ...prev, thumbnailUrl: url }));
+    return url;
   };
 
   const handleSave = async () => {
@@ -86,29 +89,32 @@ const AdminCourses = () => {
     setMessage('');
 
     try {
+      // upload thumbnail (if a new file was selected) and include in payload
       const thumbnailUrl = await uploadThumbnail();
-      const payload = {
-        title: form.title.trim(),
-        category: form.category.trim() || 'General',
-        description: form.description.trim(),
-        longDescription: form.longDescription.trim(),
-        price: Number(form.price) || 0,
-        oldPrice: Number(form.oldPrice) || 0,
-        status: form.status,
-        level: form.level,
-        instructor: form.instructor.trim(),
-        instructorInitials: form.instructorInitials.trim(),
-        emoji: form.emoji,
-        color: form.color,
-        color2: form.color2,
-        stock: Number(form.stock) || 0,
-        tags: form.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
-        thumbnailUrl
-      };
+     const payload = {
+      title: form.title.trim(),
+      category: form.category.trim() || 'General',
+      description: form.description.trim(),
+      longDescription: form.longDescription.trim(),
+      price: Number(form.price) || 0,
+      oldPrice: Number(form.oldPrice) || 0,
+      status: form.status,
+      level: form.level,
+      instructor: form.instructor.trim(),
+      instructorInitials: form.instructorInitials.trim(),
+      emoji: form.emoji,
+      color: form.color,
+      color2: form.color2,
+      stock: Number(form.stock) || 0,
+      tags: form.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
 
+      // include the thumbnail URL under `thumbnail` to match backend
+      thumbnail: thumbnailUrl
+      };
+       console.log("Payload:", payload);
       if (selectedCourse) {
         const response = await api.put(`/admin/courses/${selectedCourse._id || selectedCourse.id}`, payload);
-        setCourses((prev) => prev.map((course) => (course._id === response.data._id || course.id === response.data.id ? response.data : course)));
+        setCourses((prev) => prev.map((course) => ((course._id === response.data._id || course.id === response.data.id) ? response.data : course)));
         setMessage('Course updated successfully.');
       } else {
         const response = await api.post('/admin/courses', payload);
@@ -142,7 +148,7 @@ const AdminCourses = () => {
       color2: course.color2 || '#ec4899',
       stock: course.stock || 0,
       tags: (course.tags || []).join(', '),
-      thumbnailUrl: course.thumbnailUrl || '',
+      thumbnailUrl: course.thumbnail || course.thumbnailUrl || '',
       thumbnailFile: null
     });
     setMessage('');

@@ -84,10 +84,47 @@ const CourseDetails = () => {
     );
   }
 
+  const parseDuration = (d) => {
+    if (!d) return 0;
+    const s = String(d).trim();
+    const hoursMatch = s.match(/(\d+(?:\.\d+)?)\s*hours?/i);
+    if (hoursMatch) return Math.round(parseFloat(hoursMatch[1]) * 3600);
+    const minsMatch = s.match(/(\d+(?:\.\d+)?)\s*mins?/i);
+    if (minsMatch) return Math.round(parseFloat(minsMatch[1]) * 60);
+    if (s.includes(':')) {
+      const parts = s.split(':').map(p => parseInt(p, 10) || 0);
+      if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+      if (parts.length === 2) return parts[0] * 60 + parts[1];
+    }
+    const num = parseInt(s, 10);
+    if (!isNaN(num)) return num;
+    return 0;
+  };
+
+  const formatSeconds = (sec) => {
+    if (!sec || sec <= 0) return '00:00';
+    const hours = Math.floor(sec / 3600);
+    const minutes = Math.floor((sec % 3600) / 60);
+    const seconds = sec % 60;
+    if (hours > 0) return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
+
+  const displayedDuration = course.duration && String(course.duration).trim() !== ''
+    ? course.duration
+    : (Array.isArray(course.videos) && course.videos.length > 0
+      ? formatSeconds(course.videos.reduce((acc, v) => acc + parseDuration(v.duration), 0))
+      : '00:00');
+
   return (
     <div style={{ minHeight: '90vh', padding: '40px 5%', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1040, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 360px', gap: 24 }}>
         <div style={{ padding: 28, background: '#fff', borderRadius: 24, boxShadow: '0 10px 30px rgba(15,23,42,0.08)' }}>
+          {course.thumbnail && (
+            <div style={{ marginBottom: 18 }}>
+              <img src={course.thumbnail} alt={course.title} style={{ width: '100%', height: 260, objectFit: 'cover', borderRadius: 12 }} />
+            </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#4f46e5', marginBottom: 10 }}>{course.cat || course.category || 'General'}</div>
@@ -102,7 +139,7 @@ const CourseDetails = () => {
 
           <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 16 }}>
             {[
-              { label: 'Duration', value: course.duration || 'N/A' },
+              { label: 'Duration', value: displayedDuration },
               { label: 'Price', value: course.price ? `?${course.price}` : 'Free' },
               { label: 'Lessons', value: course.videos?.length || 0 }
             ].map((item) => (
@@ -117,7 +154,7 @@ const CourseDetails = () => {
             <h3 style={{ marginBottom: 16 }}>What you will learn</h3>
             <ul style={{ display: 'grid', gap: 12, listStyle: 'none', padding: 0, margin: 0 }}>
               {(course.highlights || ['Secure playback', 'Protected streams', 'Full access after purchase']).map((text, index) => (
-                <li key={index} style={{ display: 'flex', gap: 12, alignItems: 'center', color: '#475569' }}><span style={{ fontSize: 20 }}>•</span><span>{text}</span></li>
+                <li key={index} style={{ display: 'flex', gap: 12, alignItems: 'center', color: '#475569' }}><span style={{ fontSize: 20 }}>ï¿½</span><span>{text}</span></li>
               ))}
             </ul>
           </div>
