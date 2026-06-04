@@ -63,7 +63,7 @@ const Login = () => {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.1, backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%)', pointerEvents: 'none' }}></div>
           <div style={{ position: 'relative', zIndex: 1 }}>
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 40, textDecoration: 'none' }}>
-              <div style={{ color: 'white', fontSize: 24, fontWeight: 700 }}>Gyan Mantra</div>
+              <div style={{ color: 'white', fontSize: 24, fontWeight: 700 }}>Gyan Maantra</div>
             </Link>
             <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 800, marginBottom: 16, color: '#fff' }}>Welcome back! ??</h2>
             <p style={{ fontSize: 'clamp(0.85rem, 3vw, 1rem)', opacity: 0.9, marginBottom: 48, color: '#fff', lineHeight: 1.5 }}>Log in to continue your learning journey and access secure course videos.</p>
@@ -82,8 +82,8 @@ const Login = () => {
         <div style={{ flex: '1 1 400px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px, 5vw, 40px)', background: '#fff' }}>
           <div style={{ width: '100%', maxWidth: 480 }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <h3 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.8rem)', fontWeight: 700, marginBottom: 8, color: '#1f2937' }}>Sign in to Gyan Mantra</h3>
-              <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>Don’t have an account? <Link to="/signup" style={{ color: '#4f46e5', fontWeight: 600, textDecoration: 'none' }}>Create one free ?</Link></p>
+              <h3 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.8rem)', fontWeight: 700, marginBottom: 8, color: '#1f2937' }}>Sign in to Gyan Maantra</h3>
+              <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>Donï¿½t have an account? <Link to="/signup" style={{ color: '#4f46e5', fontWeight: 600, textDecoration: 'none' }}>Create one free ?</Link></p>
             </div>
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16 }}>
               <label style={{ display: 'grid', gap: 8, color: '#374151', fontWeight: 600 }}>Email address

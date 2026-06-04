@@ -44,7 +44,7 @@ const Navbar = () => {
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
             <img 
               src="/logo.jpeg" 
-              alt="Gyan Mantra Logo" 
+              alt="Gyan Maantra Logo" 
               style={{ 
                 width: '140px', 
                 height: 'auto', 

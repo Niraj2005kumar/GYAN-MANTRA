@@ -122,7 +122,7 @@ const Signup = () => {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.1, backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%)', pointerEvents: 'none' }}></div>
           <div style={{ position: 'relative', zIndex: 1 }}>
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 40, textDecoration: 'none' }}>
-              <div style={{ color: 'white', fontSize: 24, fontWeight: 700 }}>Gyan Mantra</div>
+              <div style={{ color: 'white', fontSize: 24, fontWeight: 700 }}>Gyan Maantra</div>
             </Link>
             <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 800, marginBottom: 16, color: '#fff' }}>Start learning today! ??</h2>
             <p style={{ fontSize: 'clamp(0.85rem, 3vw, 1rem)', opacity: 0.9, marginBottom: 36, color: '#fff', lineHeight: 1.5 }}>Create an account to get secure access to video lessons, protected by JWT and Cloudinary authenticated streaming.</p>

@@ -19,6 +19,7 @@ const courseRoutes = require('./routes/courses');
 const dashboardRoutes = require('./routes/dashboard');
 const videoRoutes = require('./routes/video');
 const uploadRoutes = require('./routes/upload');
+const paymentRoutes = require('./routes/payment');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminAuthRoutes);
@@ -29,6 +30,7 @@ app.use('/api/admin', uploadRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/video', videoRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.get('/api/firebase-test', (req, res) => {
   res.json({
@@ -44,7 +46,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('Gyan Mantra API is running 🚀');
+  res.send('Gyan Maantra API is running 🚀');
 });
 
 const PORT = process.env.PORT || 5000;

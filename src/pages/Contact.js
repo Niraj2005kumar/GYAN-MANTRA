@@ -278,7 +278,7 @@ const Contact = () => {
               <input
                 type="hidden"
                 name="_subject"
-                value="📚 New Student Enquiry - Gyan Mantra"
+                value="📚 New Student Enquiry - Gyan Maantra"
               />
 
                 <input

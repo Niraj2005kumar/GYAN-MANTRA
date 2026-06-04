@@ -123,35 +123,35 @@ const CoursePlayer = () => {
   const currentLessonData = lessons[currentLesson] || {};
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f172a', color: '#fff', padding: '20px' }}>
+    <div style={{ minHeight: '100vh', background: '#0f172a', color: '#fff', padding: '16px 4%' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, marginBottom: 24 }}>
-          <h1>{course?.title || 'Course Player'}</h1>
-          <button onClick={() => navigate('/dashboard')} style={{ background: '#4f46e5', color: 'white', padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontWeight: 700 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.875rem)', margin: 0 }}>{course?.title || 'Course Player'}</h1>
+          <button onClick={() => navigate('/dashboard')} style={{ background: '#4f46e5', color: 'white', padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)' }}>
             Back to Dashboard
           </button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24 }}>
-          <div>
-            <div style={{ background: '#111827', borderRadius: 20, overflow: 'hidden', minHeight: 400, border: '1px solid #1e293b', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ background: '#111827', borderRadius: 20, overflow: 'hidden', aspectRatio: '16/9', border: '1px solid #1e293b', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}>
               {videoURL ? (
                 <video src={videoURL} controls autoPlay style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
-                <div style={{ padding: 40, textAlign: 'center', color: '#cbd5e1' }}>Video unavailable.</div>
+                <div style={{ padding: '40px 20px', textAlign: 'center', color: '#cbd5e1', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Video unavailable.</div>
               )}
             </div>
 
-            <div style={{ marginTop: 20, padding: 20, background: '#111827', borderRadius: 20, border: '1px solid #1e293b' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-                <div>
-                  <h2 style={{ margin: 0 }}>{currentLessonData.title || `Lesson ${currentLesson + 1}`}</h2>
-                  <p style={{ color: '#9ca3af', margin: '4px 0 0 0' }}>Duration: {currentLessonData.duration || '00:00'}</p>
+            <div style={{ marginTop: 20, padding: 'clamp(16px, 4vw, 20px)', background: '#111827', borderRadius: 20, border: '1px solid #1e293b' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <h2 style={{ margin: 0, fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>{currentLessonData.title || `Lesson ${currentLesson + 1}`}</h2>
+                  <p style={{ color: '#9ca3af', margin: '8px 0 0 0', fontSize: 'clamp(0.8rem, 1.5vw, 0.875rem)' }}>Duration: {currentLessonData.duration || '00:00'}</p>
                 </div>
                 <button
                   onClick={handleToggleComplete}
                   style={{
-                    padding: '10px 16px',
+                    padding: 'clamp(8px, 2vw, 10px) clamp(12px, 3vw, 16px)',
                     background: completedLessons.includes(currentLesson) ? '#10b981' : '#4f46e5',
                     color: '#fff',
                     border: 'none',
@@ -161,22 +161,23 @@ const CoursePlayer = () => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: 8,
-                    fontSize: 14
+                    fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+                    whiteSpace: 'nowrap'
                   }}
                 >
-                  {completedLessons.includes(currentLesson) ? '✓ Completed' : 'Mark as Completed'}
+                  {completedLessons.includes(currentLesson) ? '✓ Completed' : 'Mark Done'}
                 </button>
               </div>
-              <p style={{ marginTop: 16, color: '#cbd5e1', lineHeight: 1.6 }}>{course?.description || 'Private course video playback through backend.'}</p>
+              <p style={{ marginTop: 16, color: '#cbd5e1', lineHeight: 1.6, fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)' }}>{course?.description || 'Private course video playback through backend.'}</p>
             </div>
           </div>
 
-          <div style={{ background: '#111827', borderRadius: 20, padding: 20, border: '1px solid #1e293b', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}>
+          <div style={{ background: '#111827', borderRadius: 20, padding: 'clamp(16px, 3vw, 20px)', border: '1px solid #1e293b', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}>
             <div style={{ borderBottom: '1px solid #1e293b', paddingBottom: 14, marginBottom: 16 }}>
-              <h3 style={{ margin: 0, fontSize: 18 }}>Lessons</h3>
+              <h3 style={{ margin: 0, fontSize: 'clamp(0.9rem, 2vw, 1.125rem)' }}>Lessons</h3>
               <div style={{ marginTop: 10 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#94a3b8', marginBottom: 4, fontWeight: 700 }}>
-                  <span>YOUR PROGRESS</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(0.7rem, 1.2vw, 0.75rem)', color: '#94a3b8', marginBottom: 4, fontWeight: 700 }}>
+                  <span>PROGRESS</span>
                   <span>{progress}%</span>
                 </div>
                 <div style={{ height: 6, background: '#1e293b', borderRadius: 3 }}>
@@ -185,7 +186,7 @@ const CoursePlayer = () => {
               </div>
             </div>
             
-            <div style={{ display: 'grid', gap: 12 }}>
+            <div style={{ display: 'grid', gap: 10 }}>
               {lessons.map((lesson, index) => {
                 const isCompleted = completedLessons.includes(index);
                 return (
@@ -197,25 +198,27 @@ const CoursePlayer = () => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                       width: '100%',
-                      padding: 14,
+                      padding: 'clamp(10px, 2vw, 14px)',
                       borderRadius: 14,
                       border: '1px solid #1f2937',
                       background: currentLesson === index ? '#4f46e5' : '#1e293b',
                       color: currentLesson === index ? '#fff' : '#d1d5db',
                       cursor: 'pointer',
-                      textAlign: 'left'
+                      textAlign: 'left',
+                      fontSize: 'clamp(0.8rem, 1.5vw, 0.875rem)'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
                       <span style={{ 
                         color: isCompleted ? '#10b981' : (currentLesson === index ? 'white' : '#64748b'),
-                        fontSize: 16
+                        fontSize: 16,
+                        flexShrink: 0
                       }}>
                         {isCompleted ? '✓' : '○'}
                       </span>
-                      <span>{lesson.title || `Lesson ${index + 1}`}</span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{lesson.title || `Lesson ${index + 1}`}</span>
                     </div>
-                    <span style={{ fontSize: 12, opacity: 0.8 }}>{lesson.duration || '00:00'}</span>
+                    <span style={{ fontSize: 'clamp(0.7rem, 1.2vw, 0.75rem)', opacity: 0.8, flexShrink: 0, marginLeft: 8 }}>{lesson.duration || '00:00'}</span>
                   </button>
                 );
               })}

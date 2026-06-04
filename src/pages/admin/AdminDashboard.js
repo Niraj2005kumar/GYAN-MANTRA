@@ -1,24 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import StatsCard from '../../components/admin/StatsCard';
 
-
-// NOTE: This admin panel is additive and does not modify existing routes/UI.
-// It reads Firestore-backed data using the existing backend endpoints where available.
-
 const AdminDashboard = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalCourses: 0,
-    totalStudents: 0,
-    totalEnrollments: 0,
     totalRevenue: 0,
+    revenueToday: 0,
+    revenueThisMonth: 0,
   });
-  const [recentEnrollments, setRecentEnrollments] = useState([]);
+  const [recentPayments, setRecentPayments] = useState([]);
   const [recentCourses, setRecentCourses] = useState([]);
 
   const isAdmin = user?.role === 'admin';
@@ -31,36 +27,39 @@ const AdminDashboard = () => {
 
     const load = async () => {
       try {
-        // These endpoints do not exist in the current backend.
-        // We keep the UI stable and fall back gracefully to zeros.
-        // If backend analytics endpoints are added later, this will start using them.
-        const [coursesRes, dashboardRes] = await Promise.allSettled([
+        const [coursesRes, revenueRes, paymentsRes] = await Promise.allSettled([
           api.get('/courses'),
-          api.get('/dashboard'),
+          api.get('/payment/admin/revenue'),
+          api.get('/payment/admin/payments')
         ]);
 
-        // Best-effort local fallbacks from existing endpoints.
+        // Get courses
         const courses = coursesRes.status === 'fulfilled' ? (coursesRes.value.data || []) : [];
         setRecentCourses(courses.slice(0, 4));
-        setStats((prev) => ({
-          ...prev,
-          totalCourses: courses.length,
-        }));
 
-        // Student dashboard endpoint requires auth; we can’t reliably use it for global stats.
-        if (dashboardRes.status === 'fulfilled' && dashboardRes.value?.data?.stats) {
-          // dashboard stats are per user; keep safe.
+        // Get revenue data
+        if (revenueRes.status === 'fulfilled' && revenueRes.value?.data) {
+          const revenueData = revenueRes.value.data;
           setStats((prev) => ({
             ...prev,
-            totalEnrollments: prev.totalEnrollments,
-            totalStudents: prev.totalStudents,
-            totalRevenue: prev.totalRevenue,
+            totalCourses: courses.length,
+            totalRevenue: revenueData.totalRevenue || 0,
+            revenueToday: revenueData.revenueToday || 0,
+            revenueThisMonth: revenueData.revenueThisMonth || 0,
+          }));
+        } else {
+          setStats((prev) => ({
+            ...prev,
+            totalCourses: courses.length,
           }));
         }
 
-        setRecentEnrollments([]);
+        // Get recent payments
+        if (paymentsRes.status === 'fulfilled' && paymentsRes.value?.data?.summary?.recentPayments) {
+          setRecentPayments(paymentsRes.value.data.summary.recentPayments.slice(0, 5));
+        }
       } catch (e) {
-        // keep defaults
+        console.error('Error loading admin dashboard:', e);
       } finally {
         setLoading(false);
       }
@@ -68,12 +67,6 @@ const AdminDashboard = () => {
 
     load();
   }, [isAdmin]);
-
-  const revenueHint = useMemo(() => {
-    // Placeholder: totalRevenue depends on pricing + enrollments.
-    // Backend doesn’t currently expose a revenue aggregation.
-    return 0;
-  }, []);
 
   return (
     <ProtectedRoute adminOnly={true}>
@@ -84,7 +77,7 @@ const AdminDashboard = () => {
             <div>
               <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, color: '#0f172a' }}>Admin Dashboard</h1>
               <p style={{ marginTop: 8, color: '#64748b', fontWeight: 500 }}>
-                Overview of your platform activity.
+                Overview of your platform activity and revenue.
               </p>
             </div>
           </div>
@@ -96,17 +89,17 @@ const AdminDashboard = () => {
           ) : (
             <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 22 }}>
-                <StatsCard title="Total Courses" value={stats.totalCourses} subtitle="Published and saved courses" />
-                <StatsCard title="Total Students" value={stats.totalStudents} subtitle="Users in Firestore" />
-                <StatsCard title="Total Enrollments" value={stats.totalEnrollments} subtitle="Purchases / enrollments" />
-                <StatsCard title="Total Revenue" value={stats.totalRevenue || revenueHint} subtitle="Computed revenue (when supported)" />
+                <StatsCard title="Total Courses" value={stats.totalCourses} subtitle="Published courses" />
+                <StatsCard title="Total Revenue" value={`₹${stats.totalRevenue.toLocaleString()}`} subtitle="All time revenue" />
+                <StatsCard title="Revenue Today" value={`₹${stats.revenueToday.toLocaleString()}`} subtitle="Today's income" />
+                <StatsCard title="This Month" value={`₹${stats.revenueThisMonth.toLocaleString()}`} subtitle="Current month" />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
                 <div style={{ background: 'white', borderRadius: 20, padding: 18, border: '1px solid var(--bdr)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                     <h2 style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', margin: 0 }}>Recent Courses</h2>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Latest additions</span>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Latest</span>
                   </div>
                   {recentCourses.length === 0 ? (
                     <div style={{ color: '#64748b' }}>No courses loaded yet.</div>
@@ -118,7 +111,7 @@ const AdminDashboard = () => {
                             <div style={{ fontWeight: 800, color: '#0f172a' }}>{c.title}</div>
                             <div style={{ color: '#64748b', fontSize: 13 }}>{c.category || 'Course'}</div>
                           </div>
-                          <div style={{ fontWeight: 800, color: '#4f46e5' }}>{c.price ?? ''}</div>
+                          <div style={{ fontWeight: 800, color: '#4f46e5' }}>₹{c.price || 0}</div>
                         </div>
                       ))}
                     </div>
@@ -127,12 +120,24 @@ const AdminDashboard = () => {
 
                 <div style={{ background: 'white', borderRadius: 20, padding: 18, border: '1px solid var(--bdr)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                    <h2 style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', margin: 0 }}>Recent Enrollments</h2>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Latest purchases</span>
+                    <h2 style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', margin: 0 }}>Recent Payments</h2>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Latest {recentPayments.length}</span>
                   </div>
-                  <div style={{ color: '#64748b' }}>
-                    Enrollment analytics aggregation isn’t exposed by the current backend.
-                  </div>
+                  {recentPayments.length === 0 ? (
+                    <div style={{ color: '#64748b' }}>No payments yet.</div>
+                  ) : (
+                    <div style={{ display: 'grid', gap: 10 }}>
+                      {recentPayments.map((p, idx) => (
+                        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: 12, borderRadius: 14, border: '1px solid #e2e8f0', alignItems: 'center' }}>
+                          <div>
+                            <div style={{ fontWeight: 800, color: '#0f172a', fontSize: 13 }}>ID: {p.paymentId?.substring(0, 12) || 'N/A'}...</div>
+                            <div style={{ color: '#64748b', fontSize: 12 }}>{p.completedAt ? new Date(p.completedAt).toLocaleDateString() : 'Pending'}</div>
+                          </div>
+                          <div style={{ fontWeight: 800, color: '#10b981' }}>₹{p.amount}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -148,6 +153,13 @@ const AdminDashboard = () => {
                     style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '12px 16px', borderRadius: 14, cursor: 'pointer', fontWeight: 800 }}
                   >
                     Upload Video
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => (window.location.href = '/admin/analytics')}
+                    style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '12px 16px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, color: '#4f46e5' }}
+                  >
+                    View Analytics
                   </button>
                   <button
                     type="button"
@@ -167,4 +179,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
