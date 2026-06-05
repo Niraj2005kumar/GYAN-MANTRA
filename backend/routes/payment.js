@@ -77,11 +77,21 @@ router.post('/create-order', auth, async (req, res) => {
     // Save payment record in Firestore
     const payment = new Payment({
       orderId: razorpayOrder.id,
+
       userId: req.userId,
+      userName: user.name,
+      userEmail: user.email,
+
       courseId,
+      courseTitle: course.title,
+
       amount: course.price,
       currency: 'INR',
+
+      paymentMethod: 'UPI',
+
       status: 'pending',
+
       notes: options.notes
     });
 

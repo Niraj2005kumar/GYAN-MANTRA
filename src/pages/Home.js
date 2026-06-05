@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useCourses from '../hooks/useCourses';
+import { useAuth } from '../context/AuthContext';
+import api from '../api';
 
 const Home = () => {
   const { courses, loading } = useCourses();
   const featuredCourses = courses.slice(0, 3);
+  const { user } = useAuth();
+  const [enrollments, setEnrollments] = useState([]);
+
+  useEffect(() => {
+    const fetchEnrollments = async () => {
+      if (user) {
+        try {
+          const response = await api.get('/dashboard');
+          setEnrollments(response.data.enrolledCourses || []);
+        } catch (error) {
+          console.error('Error fetching enrollments:', error);
+          setEnrollments([]);
+        }
+      } else {
+        setEnrollments([]);
+      }
+    };
+    fetchEnrollments();
+  }, [user]);
+
+  const showDoubtSolveButton = user && enrollments && enrollments.length > 0;
 
   const feedbackHighlights = [
     { icon: '🎯', text: 'Course content centered on real-world skills.' },
@@ -13,22 +36,22 @@ const Home = () => {
   ];
 
   const instructorHighlights = [
-  {
-    title: 'Class 8th–12th Education',
-    subtitle: 'Complete syllabus coverage with expert guidance.'
-  },
-  {
-    title: 'JEE Main & Advanced',
-    subtitle: 'Concept-based preparation with regular practice.'
-  },
-  {
-    title: 'NDA Preparation',
-    subtitle: 'Focused training for NDA written examination.'
-  },
-  {
-    title: 'Mock Tests & Performance',
-    subtitle: 'Track progress and improve exam readiness.'
-  }
+    {
+      title: 'Class 8th–12th Education',
+      subtitle: 'Complete syllabus coverage with expert guidance.'
+    },
+    {
+      title: 'JEE Main & Advanced',
+      subtitle: 'Concept-based preparation with regular practice.'
+    },
+    {
+      title: 'NDA Preparation',
+      subtitle: 'Focused training for NDA written examination.'
+    },
+    {
+      title: 'Mock Tests & Performance',
+      subtitle: 'Track progress and improve exam readiness.'
+    }
   ];
 
   return (
@@ -61,7 +84,7 @@ const Home = () => {
             }}>
               🎓 Class 5th–12th | JEE & NDA Academy
             </div>
-            
+
             <h1 style={{
               fontSize: 'clamp(32px, 5vw, 56px)',
               fontWeight: 'bold',
@@ -72,7 +95,7 @@ const Home = () => {
               <span style={{ color: '#fbbf24' }}>JEE | NDA</span>
               <br />Preparation
             </h1>
-            
+
             <p style={{
               fontSize: '18px',
               opacity: 0.9,
@@ -83,8 +106,25 @@ const Home = () => {
               JEE Main, JEE Advanced, and NDA preparation with
               expert guidance and regular mock tests.
             </p>
-            
-            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '40px' }}>
+
+            <style>{`
+              @media (max-width: 480px) {
+                .hero-buttons-container {
+                  flex-direction: column !important;
+                  width: 100% !important;
+                }
+                .hero-buttons-container > a,
+                .hero-buttons-container > button {
+                  width: 100% !important;
+                }
+                .hero-buttons-container button {
+                  width: 100% !important;
+                  display: block !important;
+                  text-align: center !important;
+                }
+              }
+            `}</style>
+            <div className="hero-buttons-container" style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '40px' }}>
               <Link to="/courses">
                 <button style={{
                   background: '#f59e0b',
@@ -100,7 +140,7 @@ const Home = () => {
                   Browse Courses →
                 </button>
               </Link>
-              
+
               <Link to="/signup">
                 <button style={{
                   background: 'rgba(255,255,255,0.2)',
@@ -115,8 +155,60 @@ const Home = () => {
                   Start Learning
                 </button>
               </Link>
+
+              <button
+                onClick={() => window.open("https://forms.gle/XimsntPNKubEdvaNA", "_blank")}
+                style={{
+                  background: 'rgba(167, 139, 250, 0.1)',
+                  color: 'white',
+                  border: '2px solid #a78bfa',
+                  padding: '14px 32px',
+                  borderRadius: '50px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s, background-color 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                  e.currentTarget.style.backgroundColor = 'rgba(167, 139, 250, 0.2)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.backgroundColor = 'rgba(167, 139, 250, 0.1)';
+                }}
+              >
+                Career Counselling
+              </button>
+
+              {showDoubtSolveButton && (
+                <button
+                  onClick={() => window.open("https://chat.whatsapp.com/+91 8383008436", "_blank")}
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981, #059669)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '14px 32px',
+                    borderRadius: '50px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.5)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  Doubt Solve
+                </button>
+              )}
             </div>
-            
+
             <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
               <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>Class 5th–12th</span><br />Complete Syllabus</div>
               <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>JEE Main & Advanced</span><br />Preparation</div>
@@ -124,7 +216,7 @@ const Home = () => {
               <div><span style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24' }}>Mock Test</span><br />Performance</div>
             </div>
           </div>
-          
+
           {/* Right side - Card */}
           <div style={{
             flex: 1,
@@ -152,12 +244,12 @@ const Home = () => {
                 <p style={{ margin: 0, fontSize: '12px', opacity: 0.7 }}>Structured preparation for every student.</p>
               </div>
             </div>
-            
+
             <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '10px', height: '8px', marginBottom: '10px' }}>
               <div style={{ width: '68%', height: '100%', background: 'linear-gradient(90deg, #f59e0b, #10b981)', borderRadius: '10px' }}></div>
             </div>
             <p style={{ fontSize: '14px', marginBottom: '20px' }}>Structured learning with measurable progress and clear outcomes.</p>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.08)', padding: '10px', borderRadius: '10px' }}>
                 <span style={{ fontSize: '20px' }}>✅</span>
@@ -189,7 +281,7 @@ const Home = () => {
               <button style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '10px 24px', borderRadius: '50px', cursor: 'pointer' }}>View All Courses →</button>
             </Link>
           </div>
-          
+
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -204,8 +296,8 @@ const Home = () => {
                 transition: 'transform 0.3s',
                 cursor: 'pointer'
               }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
                 <img src={course.thumbnail || `https://picsum.photos/seed/${course.id}/300/200`} alt={course.title} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
                 <div style={{ padding: '20px' }}>
                   {course.badge && (
@@ -243,9 +335,9 @@ const Home = () => {
             <span style={{ background: '#e0e7ff', color: '#4f46e5', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', fontWeight: 'bold' }}>🏆 Why Choose Gyan Maantra</span>
             <h2 style={{ fontSize: '32px', marginTop: '15px' }}>Why Students Choose <span style={{ color: '#4f46e5' }}>Gyan Maantra</span></h2>
             <p style={{ color: '#475569' }}>Expert guidance, structured learning, and regular practice
-                  for Class 5th–12th, JEE Main, JEE Advanced, and NDA aspirants.</p>
+              for Class 5th–12th, JEE Main, JEE Advanced, and NDA aspirants.</p>
           </div>
-          
+
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -273,7 +365,7 @@ const Home = () => {
             <span style={{ background: '#e0e7ff', color: '#4f46e5', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', fontWeight: 'bold' }}>👨‍🏫 Expert Faculty</span>
             <h2 style={{ fontSize: '32px', marginTop: '15px' }}>Learn from Expert <span style={{ color: '#4f46e5' }}>Educators</span></h2>
           </div>
-          
+
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
@@ -319,7 +411,7 @@ const Home = () => {
           <span style={{ background: 'rgba(255,255,255,0.15)', padding: '5px 15px', borderRadius: '50px', fontSize: '12px', display: 'inline-block', marginBottom: '20px' }}>🎓 Start Your Learning Journey </span>
           <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', marginBottom: '15px' }}>Start Your<span style={{ color: '#fbbf24' }}> Journey</span> to Success</h2>
           <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '30px' }}>Join thousands of students preparing for
-                      Class 8th–12th, JEE Main, JEE Advanced & NDA.</p>
+            Class 8th–12th, JEE Main, JEE Advanced & NDA.</p>
           <Link to="/signup">
             <button style={{
               background: '#f59e0b',

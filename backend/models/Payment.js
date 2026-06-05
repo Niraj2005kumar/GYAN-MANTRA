@@ -10,12 +10,17 @@ class Payment {
     this.userId = data.userId;
     this.userName = data.userName || '';
     this.userEmail = data.userEmail || '';
+
     this.courseId = data.courseId;
     this.courseTitle = data.courseTitle || '';
+
     this.amount = data.amount;
+
     this.currency = data.currency || 'INR';
+
     this.paymentMethod = data.paymentMethod || 'UPI';
-    this.status = data.status || 'pending'; // pending, success, failed
+
+    this.status = data.status || 'pending';
     this.receipt = data.receipt || null;
     this.notes = data.notes || {};
     this.createdAt = data.createdAt
@@ -39,15 +44,21 @@ class Payment {
     await paymentsCollection.doc(this._id).set({
       paymentId: this.paymentId,
       orderId: this.orderId,
+
       userId: this.userId,
       userName: this.userName,
       userEmail: this.userEmail,
+
       courseId: this.courseId,
       courseTitle: this.courseTitle,
+
       amount: this.amount,
       currency: this.currency,
+
       paymentMethod: this.paymentMethod,
+
       status: this.status,
+
       receipt: this.receipt,
       notes: this.notes,
       createdAt: this.createdAt,
